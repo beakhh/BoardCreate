@@ -1,0 +1,221 @@
+﻿@{
+    ViewData["Title"] = "BoardInsert";
+}
+@model BoardCreate.Models.ViewModels.BoardInsertViewModel
+@inject IHttpContextAccessor HttpContextAccessor
+<style>
+    .container2 {
+        display: flex;
+        width: 1200px;
+        height: 900px;
+    }
+
+    .left_container {
+        width: 80%;
+        height: 900px;
+        border: 1px solid lightcoral;
+    }
+
+    .right_container {
+        width: 20%;
+        height: 900px;
+        border: 1px solid #198754;
+    }
+
+    .Home_Login {
+        width: 130px;
+        height: 30px
+    }
+
+    #top {
+        display: flex;
+        align-items: center; /* 세로 정렬 */
+        border: 1px solid red;
+        height: 77px;
+        width: 100%;
+    }
+
+    #plus_button {
+        margin-left: auto; /* 오른쪽 끝으로 밀어내기 */
+    }
+
+    #rowNumber1 {
+        Title border: 1px solid lightcoral;
+        width: 100%;
+        margin-left: 0;
+        height: 50px;
+    }    
+    #rowNumber2 {
+        border: 1px solid lightcoral;
+        width: 100%;
+        margin-left: 0;
+        height: 30px;
+    }    
+    #rowNumber3 {
+        border: 1px solid lightcoral;
+        width: 100%;
+        margin-left: 0;
+        height: 691px;
+    }
+
+    #rowNumber4{
+        margin: 0px;
+        border: solid 1px;
+        height: 50px;
+        display: flex;
+        align-content: center;
+        text-align: right;
+    }
+    .TabsStyle {
+        display: flex !important;
+        flex-direction: row;
+        width: 68px;
+        padding: 0px;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+    #rowNumber1-1{
+        width: 14%;
+    }    
+    #rowNumber1-2{
+        width: 86%;
+    }
+
+    .cke_top .cke_reset_all {
+        display: none !important;
+    }
+
+    .cke {
+        width: 100% !important; /* CKEditor 컨테이너의 너비 설정 */
+        max-width: 100%; /* 최대 너비 설정 */
+    }
+
+    .cke_contents {
+        height: 600px !important; /* CKEditor 내용 영역의 높이 설정 */
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/js/ckeditor/ckeditor.js"></script>
+</head>
+
+<body>          
+
+    <div id="top">
+        @Model.BoardSections.SectionName
+    </div>
+
+    <div class="container2">
+        <div class="left_container">
+            <form id="myForm" asp-action="BoardInsert" asp-controller="User" method="post">
+                <div class="table">
+                    <div class="row" id="rowNumber1">
+                        <div id="rowNumber1-1">
+                            <select id="tab" name="Tab" class="form-control">
+                                @foreach (var item in Model.BoardTabs)
+                                {
+                                    <option value="@item.TabName">@item.TabName</option>
+                                }
+                            </select>
+                        </div>
+                        <div id="rowNumber1-2">
+                            <input type="text" id="title" name="Title" class="form-control" placeholder="제목을 입력하세요" required />
+                        </div>
+                    </div>
+                    <div class="row" id="rowNumber3">
+                        <textarea name="Contents" id="content"></textarea>
+                    </div>
+                    <div class="row" id="rowNumber4">
+                        <div>
+                            @if(Model.SessionLevel < 4){
+                                <select id="boardPrivate" name="BoardPrivate">
+                                    <option value="4" selected>일반글</option>
+                                    <option value="1">공지사항</option>
+                                    <option value="2">이벤트</option>
+                                    <option value="0">관리자 공지</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <input type="hidden" id="boardPrivate" name="BoardPrivate" value="4" />
+                            }
+                            <button type="button" class="btn btn-outline-primary" onclick="InsertBoard()">등록하기</button>&nbsp;
+                            <button type="button" class="btn btn-outline-primary" onclick="">돌아가기</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="SectionIDX" id="sectionIDX" value="@Model.BoardSections.IDX" />
+                    <input type="hidden" name="UserID" id="" value="@Model.SessionUserID" />
+                    <input type="hidden" name="NickName" id="" value="@Model.SessionNickName" />
+                </div>
+            </form>
+
+        </div>
+
+        <div class="right_container">
+            
+        </div>
+    </div>
+    <script>
+        'use strict';
+
+        function InsertBoard() {
+            const regTitle1 = /^(?!\s*$)/; // 빈칸만 입력 금지
+            const regTitle3 = /^[a-zA-Z0-9\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F][a-zA-Z0-9\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F ]{0,23}$/;
+            const regContents1 = /^(?!\s*$)/; // 빈칸만 입력 금지
+
+            let Title = noSpaces(document.getElementById("title").value);
+            let Content = CKEDITOR.instances.content.getData();
+
+            let TabIdx = document.getElementById("tab").value;
+            console.log("Asdf"); // 선택된 값 출력
+            let BoardPrivate = document.getElementById("boardPrivate").value;
+            console.log(BoardPrivate); // 선택된 값 출력
+            let SectionIDX = document.getElementById("sectionIDX").value;
+
+            if (!regTitle1.test(Title)) {
+                alert("제목을 입력하시오");
+                document.getElementById("title").focus();
+                console.log("1");
+                return false;
+            }
+            else if (!regTitle3.test(Title)) {
+                alert("제목은 25글자보다 적어야 합니다.");
+                document.getElementById("title").focus();
+                console.log("5");
+                return false;
+            }
+            else if (!regContents1.test(Content)) {
+                alert("내용을 입력하시오");
+                CKEDITOR.instances.content.focus();
+                console.log("7");
+                return false;
+            }
+
+            console.log("9");
+
+            // 유효성 검사를 통과하면 폼 제출
+            document.getElementById("myForm").submit(); // 폼 ID를 사용해 제출
+        }
+
+
+        function noSpaces(str) {
+            return str.replace(/\s+/g, " ").trim();
+        }
+
+        CKEDITOR.replace('content', {
+            language: 'ko',
+            height: '100%', // 높이를 100%로 설정
+            width: '100%',  // 너비를 100%로 설정 (CSS 방식)
+            toolbar: [
+                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline'] },
+                { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                { name: 'insert', items: ['Image', 'Table'] }
+            ]
+        });
+
+    </script>
+</body>
+

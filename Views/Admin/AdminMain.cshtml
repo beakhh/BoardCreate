@@ -1,0 +1,780 @@
+﻿@{
+    ViewData["Title"] = "AdminMain";
+}
+@model BoardCreate.Models.ViewModels.ViewModelLists
+
+@inject IHttpContextAccessor HttpContextAccessor
+<style>
+    #container1 {
+        display: flex;
+        width: 1650px;
+        height: 850px;
+        margin-top:2%;
+    }
+    .right_container {
+        width: 82.5%;
+        border: 1px solid;
+        border-radius: 15px;
+        border-color: #212529;
+    }
+    .left_container {
+        width: 17.5%;
+    }
+    #plus_button {
+        margin-left: auto; /* 오른쪽 끝으로 밀어내기 */
+    }
+    #left_top{
+        margin:13px;
+        height: 94px;
+        width:90%;
+        border: 1px solid;
+        border-radius: 18px;
+        border-color: #ced4da;
+    }
+    .left_main{
+        margin: 13px;
+        height: 55px;
+        width: 90%;
+        display: flex;
+    }
+    #left_foot{
+        height: 55px;
+        width: 90%;
+        text-align:center;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%; /* 화면 전체 높이 */
+        width:100%;
+        overflow: hidden; /* 스크롤 제거 */
+    }
+    #BoardSection_style {
+        border: 1px solid;
+        border-color: palevioletred;
+        justify-content: center;
+        align-items: center;
+        border-color: #ced4da;
+        border-radius: 10px;
+        width: 224px;
+        height: 54px;
+        display: flex;
+    }
+    #BoardSection_style2{
+        border-color: darkred;
+        border: 1px solid;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 39px;
+        height: 54px;
+    }
+    #sapn_col {
+        width: 39px;
+    }
+
+    #section_10 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 10%;
+        height: 100%;
+        text-align: center;
+    }
+    #section_60 {
+        display: flex;
+        border-radius: 7px;
+        justify-content: center;
+        align-items: center;
+        width: 70%;
+        height: 100%;
+        background-color: #dee2e6;
+        text-align: center;
+    }
+    #section_30 {
+        width: 30%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        justify-content: center;
+        align-items: center;
+    }
+    #BoardSection_Modal_Tabel {
+        width: 470px;
+        height: 273px;
+        display: flex;
+        flex-direction: column; 
+        gap: 0; 
+        margin-left : 10px;
+        margin-bottom: -18px;
+    }
+    .row {
+        display: flex;
+        flex-grow: 1;
+        width: 100%;
+        height:200px;
+        gap: 0; 
+    }
+
+    .modal-col-9, .modal-col-3, .modal-col-6, .modal-col {
+        flex-grow: 1;
+        border: 1px solid lightgray;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+    }
+    .modal-col-9 {
+        flex: 9;
+    }
+    .modal-col-3 {
+        flex: 3;
+    }
+    .modal-col-6 {
+        flex: 6;
+    }
+    .modal-col-12 {
+        flex: 12;
+    }
+
+    #ModalRangeSpan0{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }    
+    #ModalRangeSpan1{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    #modalContent{
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    #modelTabs{
+        margin-left: 6px;
+    }
+    #a1{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 9px;
+    }
+    #a3{
+        display: flex;
+        justify-content: space-around;
+        margin-top: 6px;
+        font-size: 13px;
+        width: 90%;
+        margin-left: 5%;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    @*
+    <div id="top">
+        <div>asdf</div>
+        <div>
+            <button type="button" id="plus_button" class="btn btn-outline-primary btn-sm" onclick="location.href='/Board/BoardSectionsAdd';">+</button>
+        </div>
+    </div>
+    *@
+
+    <div id="container1">
+        <div class="left_container">
+            <div id="left_top">
+                <div id="a1">
+                    <div >관리자 페이지 </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="OutAdmin()">
+                            나가기
+                        </button>
+                    </div>
+                </div>
+                <div class="nav nav-tabs" id="a3">
+                    <div class="nav-link active" id="tabs1" onclick="tabsStautsChange(0)">
+                        활동중
+                    </div>
+                    <div class="nav-link" id="tabs2" onclick="tabsStautsChange(1)">
+                        중지
+                    </div>
+                </div>
+            </div>
+            <div id="tabs3" style="display:block">
+                @foreach (var item in Model.SectionListsStatusValid)
+                    {
+                    <div class="left_main">
+                        <div id="BoardSection_style">
+                            <span id="section_10">
+                                @item.SectionOrder
+                            </span>                            
+                            <span id="section_60" onclick="loadIframe(@item.IDX)">
+                                @item.SectionName
+                            </span>
+                            <div id="section_30">
+                                <span id="" style="font-size:13px">
+                                    @switch (@item.SectionStatus)
+                                    {
+                                        case 0:
+                                            <span style="color: green;">활성화</span>
+                                            break;
+                                        case 1:
+                                            <span style="color: gray;">비활성화</span>
+                                            break;                                    
+                                    }
+                                </span>
+                                <span style="font-size:14px; margin-bottom:-1px" data-bs-toggle="modal" data-bs-target="#boardSectionMore" onclick="BoardSectionMore('@item.IDX','@item.SectionName', '@item.SectionStatus', '@item.SectionStartDate', '@item.SectionEndDate')">
+                                    간략보기
+                                </span>
+                            </div>
+                        </div>
+                        <div id="table">
+                            <div id="row">
+                            @*
+                                <div id="col-1" style="width:39px; text-align:center">
+                                    <img src="~/images/upArrow.jpg" alt="Example Image" style="width: 39px; height: 26px;">
+                                </div>                            
+                                <div id="col-1" style="width:39px; text-align:center">
+                                    <img src="~/images/downArrow.jpg" alt="Example Image" style="width: 39px; height: 26px;">
+                                </div>
+                            *@
+                                <div id="col-1" style="width:39px; text-align:center">
+                                    <span onclick="UpDownBoardSectionOrder('@item.SectionOrder', 0)">
+                                    ▲
+                                    </span>
+                                </div>
+                                <div id="col-1" style="width:39px; text-align:center">
+                                    <span onclick="UpDownBoardSectionOrder('@item.SectionOrder', 1)">
+                                    ▼
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <input type="hidden" id="hiddenIDX" value="@item.IDX" />
+                    </div>
+                    }
+            </div>
+            <div id="tabs4" style="display:none">
+                @foreach (var item in Model.SectionListsStatusInvalid)
+                    {
+                    <div class="left_main">
+                        <div id="BoardSection_style">
+                            <span id="section_10">
+                                @item.SectionOrder
+                            </span>
+                            <span id="section_60" onclick="loadIframe(@item.IDX)">
+                                @item.SectionName
+                            </span>
+                            <div id="section_30">
+                                <span id="" style="font-size:13px">
+                                    @switch (@item.SectionStatus)
+                                    {                                 
+                                        case 2:
+                                            <span style="color: red;">정지</span>
+                                            break;                                    
+                                        case 3:
+                                            <span style="color: darkred;">삭제 대기</span>
+                                            break;                                        
+                                        case 4:
+                                            <span style="color: darkred;">삭제</span>
+                                            break;
+                                    }
+                                </span>
+                                <span style="font-size:14px; margin-bottom:-1px" data-bs-toggle="modal" data-bs-target="#boardSectionMore" onclick="BoardSectionMore('@item.IDX','@item.SectionName', '@item.SectionStatus', '@item.SectionStartDate', '@item.SectionEndDate')">
+                                    간략보기
+                                </span>
+                            </div>
+                        </div>
+                        <div id="table">
+                            <div id="row">
+                            </div>
+                        </div>
+                        <input type="hidden" id="hiddenIDX" value="@item.IDX" />
+                    </div>
+                    }
+            </div>
+            <div id ="left_foot">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#boardSectionAdd">
+                    추가
+                </button>
+            </div>
+        </div>
+
+        <div class="right_container">
+            <iframe id="myIframe" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+        </div>
+
+    </div>
+
+</body>
+<div class="modal fade" id="boardSectionAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">갤러리 목록 추가</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input type="text" id="SectionName" class="form-control" placeholder="갤러리명을 입력하시오" />
+                    <input type="number" id="SectionOrder" value="0" class="form-control mt-2" placeholder="순서를 입력하시오" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            <button type="button" class="btn btn-primary" onclick="SectionCreate()">추가</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="boardSectionMore" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="table" id="BoardSection_Modal_Tabel">
+                    <div class="row" id="showRow" style="display:flex;">
+                        <div class="modal-col-9" id="ModalSectionName"></div>
+                        <div class="modal-col-3">
+                            <button id="toggleButton" class="btn btn-primary" onclick="toggleInputRow()">이름 변경</button>
+                        </div>
+                    </div>
+                    <div class="row" id="hiddenRow" style="display: none;">
+                        <div class="modal-col-9">
+                            <input style="width:245px; text-align:center" type="text" id="ModalSectionNameInput" class="form-control" value="" placeholder="" />
+                            <button style="margin-left:5px" id="changeSectionName" class="btn btn-success" onclick="ChangeSectionName()">저장</button>
+                        </div>
+                        <div class="modal-col-3">
+                            <button id="toggleButton2" class="btn btn-primary" onclick="toggleInputRow()">취소</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="modal-col-9" id="ModalRangeSpan0" style="display:flex">
+                            <input type="range" class="form-range" min="0" max="2" id="customRange0" value="">
+                        </div>
+                        <div class="modal-col-9" id="ModalRangeSpan1" style="display:none">
+                            <input type="range" class="form-range" min="1" max="4" id="customRange1" value="">
+                        </div>
+                        <div class="modal-col-3" id="ModalSectionStatus"></div>
+                    </div>
+                    <div class="row">
+                        <div class="modal-col" id="modalContent"></div>
+                    </div>
+                    <div class="row" id="sectionDays1" style="display:flex">
+                        <div class="modal-col" id="ModalSectionStartDate1"></div>
+                    </div>
+                    <div class="row" id="sectionDays2" style="display:none">
+                        <div class="modal-col-6" id="ModalSectionStartDate2">5</div>
+                        <div class="modal-col-6" id="ModalSectionEndDate">6</div>
+                    </div>
+                    <input type="hidden" id="ModalSectionIDX" value="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="BoardSectionDelete()">삭제</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1050; align-items: center; justify-content: center;">
+    <div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+<script>
+    'use strict';
+
+    function loadIframe(SectionIDX){
+        const iframe = document.getElementById('myIframe');
+    iframe.src = `/Admin/AdminMainDetail?SectionIDX=${SectionIDX}`;
+}
+
+    let check = 0;
+    let SectionStatusCheck;
+    let SectionStatusType = 0;
+    let rangeIdChange = "customRange0";
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const savedStatusType = localStorage.getItem('SectionStatusType');
+        if (savedStatusType == 1) {
+            SectionStatusType = 1 // 복원한 값
+            tabsStautsChange(SectionStatusType); // 초기 함수 호출
+            localStorage.removeItem('SectionStatusType');
+        }
+    });
+
+    function tabsStautsChange(type){
+
+        SectionStatusType = type;
+
+        if(SectionStatusType == 1) rangeIdChange = "customRange1";
+        else rangeIdChange = "customRange0";
+
+        const tabs1 = document.getElementById("tabs1");
+        const tabs2 = document.getElementById("tabs2");
+        const tabs3 = document.getElementById("tabs3");
+        const tabs4 = document.getElementById("tabs4");
+        const sectionDays1 = document.getElementById("sectionDays1");
+        const sectionDays2 = document.getElementById("sectionDays2");
+        const ModalRangeSpan0 = document.getElementById("ModalRangeSpan0");
+        const ModalRangeSpan1 = document.getElementById("ModalRangeSpan1");
+
+        sectionDays1
+        if(type == 1){
+            tabs2.className = "nav-link active";
+            tabs1.className = "nav-link";
+            tabs3.style.display = "none";
+            tabs4.style.display = "block";
+            sectionDays1.style.display = "none";
+            sectionDays2.style.display = "flex";
+            ModalRangeSpan0.style.display = "none";
+            ModalRangeSpan1.style.display = "flex";
+        }
+        else{
+            tabs2.className = "nav-link";
+            tabs1.className = "nav-link active";
+            tabs3.style.display = "block";
+            tabs4.style.display = "none";
+            sectionDays1.style.display = "flex";
+            sectionDays2.style.display = "none";
+            ModalRangeSpan0.style.display = "flex";
+            ModalRangeSpan1.style.display = "none";
+        }
+    }
+
+    function SectionCreate() {
+        let SectionName = document.getElementById("SectionName").value.trim();
+        let SectionOrder = document.getElementById("SectionOrder").value.trim();
+
+        if (SectionName === "") {
+            alert("갤러리명을 입력해주세요.");
+            document.getElementById("SectionName").focus();
+            return;
+        }
+
+        if (SectionOrder === "") {
+            alert("순서를 입력해주세요.");
+            document.getElementById("SectionOrder").focus();
+            return;
+        }
+
+        $.ajax({
+            url: "/Admin/SectionCreate",
+            type: 'POST',
+            data: {
+                SectionName: SectionName,
+                SectionOrder: SectionOrder
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.isAvailable) {
+                    alert('갤러리가 성공적으로 추가되었습니다!');
+                    $('#boardSectionAdd').modal('hide'); // 모달 닫기
+                    document.getElementById("SectionName").value = ""; // 입력 필드 초기화
+                    document.getElementById("SectionOrder").value = 0;
+                    location.reload(); // 페이지 새로고침
+                } else {
+                    alert('갤러리 추가에 실패했습니다. 다시 시도해주세요.');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    function BoardSectionMore(SectionIDX ,SectionName, SectionStatus, SectionStartDate, SectionEndDate) {
+        SectionStatusCheck = SectionStatus;
+        document.getElementById("ModalSectionIDX").value = SectionIDX;
+        document.getElementById("ModalSectionName").innerHTML = SectionName;
+        document.getElementById("ModalSectionStartDate1").innerHTML = SectionStartDate;
+        document.getElementById("ModalSectionStartDate2").innerHTML = SectionStartDate;
+        document.getElementById("ModalSectionEndDate").innerHTML = SectionEndDate;
+
+        const BoardTabs = @Html.Raw(Json.Serialize(Model.BoardTabs));
+        var IDX = SectionIDX;
+        const filteredData = BoardTabs.filter(item => item.sectionIDX == IDX);
+        // 필터링된 데이터를 모달에 표시
+        const modalContent = document.getElementById("modalContent");
+        if (filteredData.length > 0) {
+            modalContent.innerHTML = filteredData
+            .map(item => `<span id="modelTabs">${item.tabName}</span>`) // 반복적으로 데이터를 생성
+                .join(""); // HTML 조각들을 하나의 문자열로 결합
+        } 
+        else {
+            modalContent.innerHTML = "<p>데이터가 없습니다.</p>";
+        }
+
+
+        let SectionStatusValue = Number(SectionStatus);
+        const statusElement = document.getElementById("ModalSectionStatus");
+        switch (SectionStatusValue) {
+            case 0:
+                statusElement.innerHTML = '<div style="color: green;">활성화</div>';
+                break;
+            case 1:
+            statusElement.innerHTML = '<div style="color: gray;">비활성</div>';
+                break;
+            case 2:
+            statusElement.innerHTML = '<div style="color: red;">정지</div>';
+                break;                
+            case 3:
+            statusElement.innerHTML = '<div style="color: darkred;">삭제 대기</div>';
+                break;                
+            case 4:
+            statusElement.innerHTML = '<div style="color: darkred;">삭제</div>';
+                break;
+        }
+
+        @*
+        document.getElementById("ModalSectionStatus").innerHTML = ModalSectionStatus;
+        let ModalSectionStatus = SectionStatus;
+        *@
+            // Range 값 설정 (모달이 열릴 때)
+            
+        let rangeInput;
+        if(SectionStatusType == 1){
+            rangeInput = document.getElementById("customRange1");
+        }
+        else{
+            rangeInput = document.getElementById("customRange0");
+        }
+            
+        document.getElementById("boardSectionMore").addEventListener("shown.bs.modal", function () {
+            rangeInput.value = SectionStatus; // 동적으로 값 설정
+            rangeInput.dispatchEvent(new Event('input')); // Slider 스타일 즉시 업데이트
+        });
+
+    }
+
+    function BoardSectionDelete() {
+        const deleteIdx = document.getElementById("ModalSectionIDX").value;
+    }
+    
+    function UpDownBoardSectionOrder(SectionOrder, type){
+        @*
+        let SectionOrderResult = 3;
+        if(type == 0){
+            SectionOrderResult = Number(SectionOrder) - 1;
+        }
+        else if (type == 1) {
+            SectionOrderResult = Number(SectionOrder) + 1;
+        }
+        else{
+            alert("오류발생");
+            false;
+        }
+
+        0 줄이기 1 늘리기
+        *@
+
+                
+
+        $.ajax({
+            url: "/Admin/SectionOrderUpDown",
+            type: 'POST',
+            data: {
+                SectionOrder: SectionOrder,
+                Type: type
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.isAvailable) {
+                    location.reload();
+                } 
+                else {
+                    alert('다시 시도해주세요.');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    let SectionStatusSlider = -1;
+    document.addEventListener("click", function (event) {
+
+        if (event.target.id === rangeIdChange) {
+
+            SectionStatusSlider = event.target.value;
+
+            let statusElement = document.getElementById("ModalSectionStatus");
+            let SectionStatusValue = Number(SectionStatusSlider)
+
+            switch (SectionStatusValue) {
+                case 0:
+                    statusElement.innerHTML = '<div style="color: green;">활성화</div>';
+                    break;
+                case 1:
+                statusElement.innerHTML = '<div style="color: gray;">비활성</div>';
+                    break;
+                case 2:
+                statusElement.innerHTML = '<div style="color: red;">정지</div>';
+                    break;                            
+                case 3:
+                statusElement.innerHTML = '<div style="color:  darkred;">삭제 대기</div>';
+                    break;                            
+                case 4:
+                statusElement.innerHTML = '<div style="color: darkred;">삭제</div>';
+                    break;
+            }
+        }
+    });
+
+    function SectionStatusChange(){
+        const SectionStatusSliderValue = document.getElementById(rangeIdChange).value;
+        const SectionStatusSliderIDX = document.getElementById("ModalSectionIDX").value;
+        let sectionStatusOrignValue = SectionStatusCheck;
+        $.ajax({
+            url :   "/Admin/SectionStatusUpdate",
+            type    : 'POST',
+            data: {
+                SliderIDX: SectionStatusSliderIDX,
+                SliderValue: SectionStatusSliderValue,
+                SliderOrignValue: sectionStatusOrignValue
+            },
+            dataType: 'json',
+            success: function (response){
+                check = 1;
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    document.getElementById("boardSectionMore").addEventListener("hidden.bs.modal", function () {
+        const overlay = document.getElementById("loadingOverlay");
+
+        if (SectionStatusCheck !== SectionStatusSlider && SectionStatusSlider !== -1) {
+            const userResponse = confirm("SectionStatus를 변경하시겠습니까?");
+            if (userResponse) {
+                overlay.style.display = "flex";
+                SectionStatusChange();
+            }
+        }
+
+
+        setTimeout(function () {
+            if (check == 1) {
+                localStorage.setItem('SectionStatusType', SectionStatusType);
+                location.reload();
+            } 
+            else {
+                const showRow = document.getElementById("showRow");
+                if (showRow.style.display === "none") {
+                    hiddenRow.style.display = "none";
+                    showRow.style.display = "flex";
+                }
+                // 새로고침이 발생하지 않을 경우 초기화
+                const modal = document.getElementById("boardSectionMore");
+                const inputs = modal.querySelectorAll("text, range");
+
+                inputs.forEach((input) => {
+                    if (input.type === "text" || input.type === "range") {
+                        input.checked = false; // 체크박스와 라디오 버튼 초기화
+                    } else {
+                        input.value = ""; // 나머지 입력 필드 초기화
+                    }
+                });
+                return;
+            }
+        }, 2000);
+    });
+
+    function toggleInputRow() {
+        const showRow = document.getElementById("showRow");
+        const hiddenRow = document.getElementById("hiddenRow");
+        const inputField = document.getElementById("ModalSectionNameInput");
+
+        if (hiddenRow.style.display === "none") {
+            hiddenRow.style.display = "flex";
+            showRow.style.display = "none";
+            const displayValue = document.getElementById("ModalSectionName").textContent.trim();
+            inputField.placeholder = displayValue;
+        } 
+        else if (showRow.style.display === "none") {
+            hiddenRow.style.display = "none";
+            showRow.style.display = "flex";
+        }
+    }
+
+    function ChangeSectionName(){
+        let changeInputNameValue = document.getElementById("ModalSectionNameInput").value.trim();
+        let modalSectionIDX = document.getElementById("ModalSectionIDX").value.trim();
+
+        const sectionNames = @Html.Raw(Json.Serialize(Model.SectionListsStatusValid.Select(item => item.SectionName)));
+        if (sectionNames.includes(changeInputNameValue)) {
+            document.getElementById("ModalSectionNameInput").focus();
+            alert("중복된 값입니다. 다른 값을 입력해주세요.");
+        }
+        $.ajax({
+            url: "/Admin/SectionNameUpdate",
+            type:"POST",
+            data:{
+                SectionIdx: modalSectionIDX,
+                SectionNameValue: changeInputNameValue
+            },
+            dataType : 'json',
+            success: function (response) {
+                if (response.isAvailable) {
+                    alert('변경 완료.');
+                    check = 1;
+                    toggleInputRow();
+                }
+                else {
+                        alert('다시 시도해주세요 d.');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    function OutAdmin(){
+        window.location.href = "/Admin/GoToHome";
+    }
+</script>
+@*
+            rangeIdChange 를 유동적으로 받을 수 없음 아이디를 먼저 불러서
+            document.getElementById(rangeIdChange).addEventListener("click", function () {
+                SectionStatusSlider = this.value; 이것도 비 유동적
+                let statusElement = document.getElementById("ModalSectionStatus");
+
+                let SectionStatusValue = Number(SectionStatusSlider)
+                switch (SectionStatusValue) {
+                    case 0:
+                        statusElement.innerHTML = '<div style="color: green;">활성화</div>';
+                        break;
+                    case 1:
+                    statusElement.innerHTML = '<div style="color: gray;">비활성</div>';
+                        break;
+                    case 2:
+                    statusElement.innerHTML = '<div style="color: red;">정지</div>';
+                        break;
+                    case 3:
+                    statusElement.innerHTML = '<div style="color:  darkred;">삭제 대기</div>';
+                        break;
+                    case 4:
+                    statusElement.innerHTML = '<div style="color: darkred;">삭제</div>';
+                        break;
+                }
+            });
+        *@

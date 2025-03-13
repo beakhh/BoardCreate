@@ -1,0 +1,286 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    int count = 0;
+}
+@model BoardCreate.Models.ViewModels.ViewModelLists
+@inject IHttpContextAccessor HttpContextAccessor
+<style>
+    .container1 {
+        display : flex;
+        width : 1200px;
+        height: 100%;
+    }
+
+    .left_container {
+        width: 80%;
+        height: 900px;
+    }
+
+    .right_container {
+        width: 20%;
+        height: 900px;
+        margin: 0 0 0 26px;
+    }
+
+    .Home_Login {
+        width: 130px;
+        height: 30px
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0px;
+        margin-left: 0px;
+        margin-right: -46px;
+    }
+
+    .col-1 {
+        flex: 1 1 calc(50% - 10px);
+        max-width: calc(50% - 23px);
+        height: 328px;
+        border: 0.1px solid #ced4da;
+        border-radius: 28px;
+        padding: 14px;
+        box-sizing: border-box;
+        margin: 0 5px 10px 5px;
+    }
+    }
+
+    .section_board_prolog_1{
+        font-size: 30px;
+        margin-left: 0px;
+        margin-bottom: 15px;
+
+    }
+
+    .section_board_prolog_2{
+        display: flex;
+        justify-content: space-between;
+        font-size: 20px;
+        margin-bottom: 5px;
+        margin-left: 21px;
+        padding-left: 15px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .section_board_prolog_1:hover {
+        background-color: rgba(128, 128, 128, 0.2) !important;
+    }
+    .section_board_prolog_2:hover {
+        background-color: rgba(128, 128, 128, 0.15) !important;
+    }
+
+    .clickable-area {
+        color: black; /* 텍스트 색상 */
+        cursor: pointer; /* 마우스 커서 */
+        font-size: 30px;
+        margin-left: 0px;
+        margin-bottom: 12px;
+        padding-left: 15px;
+        border-bottom: 2px solid black; /* 두께 2px, 검정색 밑줄 */
+        width: 150px; /* 원하는 길이(px, %, em 등 조절 가능) */
+    }
+
+    a {
+        color: inherit; /* 텍스트 색상을 부모 요소와 동일하게 유지 */
+        text-decoration: none; /* 밑줄 제거 */
+    }
+    a:hover, a:focus, a:active {
+        color: inherit; /* 호버 상태에서도 색상 변경 없음 */
+        text-decoration: none; /* 호버 상태에서도 밑줄 제거 */
+    }
+    #rigth_1{
+        display: flex;
+        width: 100%;
+        height: 50px;
+    }
+
+    #recentBox1{
+        width: 100%;
+        height: 500px;
+        margin: 14px 0 0 0;
+        border: 0.1px solid #ced4da;
+        border-radius: 28px;
+    }
+
+    #recentBox2{
+        width: 100%;
+        height: 49%;
+        border: 0.1px solid #ced4da;
+        padding: 10px;
+        margin: 1% 0 1% 0;
+    }
+    #recontBox2Title{
+        font-size: 13px;
+        margin: 0 0 7px 0;
+    }
+
+    .recentList {
+        width: 100%;
+        height: 21px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+</style>
+
+<body>
+    <div class="container1">
+        <div class="left_container">
+            <div class="row">
+                @foreach (var item in Model.SectionListsStatusValid.GroupBy(a => new { a.IDX , a.SectionName}))
+                {
+                    <div class="col-1">
+                        <div class="section_board_prolog_1">
+                            <a class="text-decoration-none clickable-area d-flex align-items-center" asp-controller="User" asp-action="Board" asp-route-SectionIDX="@item.Key.IDX">
+                                @item.Key.SectionName
+                            </a>
+                        </div>
+                        @foreach (var board in item)
+                        {
+                            @if (board.BoardIDX != 0)
+                            {
+                                <div class="section_board_prolog_2" onclick="BoardDetail(@board.BoardIDX, @board.IDX)">
+                                    <div class="boardTitle">
+                                        @board.Title
+                                        <span id="commentCount">@board.CommentCount</span>
+                                    </div>
+                                    <div class="time-text" data-time="@board.BoardCreatedAt">
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="right_container">
+            <div>
+                @*@if (@HttpContextAccessor.HttpContext.Session.GetString("NickName") == null)*@
+                @if (ViewBag.NickName == "NoData")
+                {
+                    <form action="/User/Login" method="post" class="p-4 border rounded shadow-sm">
+                        <div class="mb-2 d-flex align-items-center ">
+                            <input type="text" id="UserId" name="UserId" class="form-control Home_Login me-2" style="font-size: 13px;" placeholder="아이디" required>
+                            <input type="checkbox" name="idSave" checked /><span style="font-size:10px; text-align:center; margin-left:3px;">아이디<br>저장</span>
+                        </div>
+                        <div class="mb-2 d-flex ">
+                            <input type="password" id="UserPW" name="UserPW" placeholder="비밀번호" style="font-size: 13px;" class="form-control Home_Login me-2" required>
+                            <button type="submit" class="btn btn-outline-primary btn-sm" style="font-size: 13px;">Login</button>
+                        </div>
+                        <div class="text-center">
+                            <a asp-controller="User" asp-action="Register" style="font-size:10px;">회원가입</a>
+                            <a href="/User/Register" style="font-size:10px;">아이디/비밀번호 찾기</a>
+                        </div>
+                    </form>
+                }
+                else 
+                {
+                    <div id="rigth_1">
+                        <div style="width: 50%;">
+                            @ViewBag.Member.NickName 님
+                        </div>
+                        <div style="width: 50%;">
+                            등급 @ViewBag.Member.UserLevel
+                        </div>
+                    </div>
+                    <div id="rigth_1">
+                        <div style="width: 100%;">
+                            <a asp-controller="User" asp-action="Logout" style="font-size:10px;">로그아웃하기</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div id="recentBox1">
+                <div id="recentBox2">
+                    <div id="recontBox2Title">
+                        최신글
+                    </div>
+                    <div id="recentListBox">
+                        <div class="recentList">
+                            가나다라마바사아자차카타파하가나다
+                        </div>
+                    </div>
+                </div>
+                <div id="recentBox2">
+                    <div id="recontBox2Title">
+                        내가 본 최신글
+                    </div>
+                    <div id="recentListBox">
+                        <div class="recentList">
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    'use script'
+
+    function sendServerNotification() {
+        let userId = "admin";
+
+        connection.start().then(() => {
+            console.log("✅ SignalR 연결 완료 후 알림 전송!");
+            return connection.invoke("SendNotification", userId, "서버에서 온 알림!");
+        }).catch(err => console.error("❌ SignalR 연결 실패:", err.toString()));
+    }
+
+    function BoardDetail(boardIDX, SectionIDX) {
+        window.location.href = `User/BoardDetail?BoardIDX=${boardIDX}&SectionIDX=${SectionIDX}`;
+    }
+
+    function formatTimeDifference(pastTime) {
+        const now = new Date();
+        let formattedPastTime = pastTime.replace("오전 ", "").replace("오후 ", "");
+        const past = new Date(formattedPastTime);
+        const diffInSeconds = Math.floor((now - past) / 1000);
+
+        if (diffInSeconds < 1) return "방금 전";
+        if (diffInSeconds < 60) return `${diffInSeconds}초 전`;
+
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) return `${diffInMinutes}분 전`;
+
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) return `${diffInHours}시간 전`;
+
+        return `${past.getMonth() + 1}월 ${past.getDate()}일`;
+    }
+
+    function updateAllTimeElements() {
+        const timeElements = document.querySelectorAll(".time-text");
+        timeElements.forEach(element => {
+            const pastTime = element.getAttribute("data-time");
+            const newText = formatTimeDifference(pastTime);
+
+
+            if (element.innerText !== newText) {
+                element.style.fontSize = "12px"
+                element.innerText = newText;
+            }
+        });
+    }
+    function updataBoardCommentsCount() {
+        document.querySelectorAll("#commentCount").forEach(cc => {
+            const count = cc.innerText;
+            if (+count != 0) cc.innerText = `[${count}]`
+            else cc.innerText = "";
+        });
+    }
+
+
+    setInterval(updateAllTimeElements, 10000);
+    updateAllTimeElements();
+    updataBoardCommentsCount();
+    updateUserRecentViewLists();
+</script>
+

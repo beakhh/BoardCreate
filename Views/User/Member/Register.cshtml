@@ -1,0 +1,299 @@
+﻿@using BoardCreate.Models.Member
+@{
+    ViewData["Title"] = "회원가입";
+}
+@model MemberModel
+<html lang="ko">
+<style>
+    #regiserMain {
+        width: 500px;
+        height: 1000px;
+    }
+
+    .inputSize {
+        width: 70%;
+    }
+
+    .input-validation-error {
+        border-color: red;
+        outline: none;
+    }
+
+    .text-danger {
+        color: red;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<div class="container mt-5" id="regiserMain">
+    <h2 class="text-center mb-4">회원가입</h2>
+    <form id="register_main" asp-action="Register" asp-controller="User" method="post" class="p-4 border rounded shadow-sm">
+        <div>
+            <label for="userId" class="form-label">아이디</label>
+            <div class="d-flex">
+                <div class="mb-3">
+                    <input type="text" id="userId" name="UserId" class="form-control" placeholder="아이디를 입력하세요" required />
+                </div>
+                <div class="mb-3">
+                    <input type="button" id="idCheck" name="idCheck" class="btn btn-outline-success" onclick="check_Id_Nick(0)" value="아이디 중복확인" />
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password" id="password" name="UserPW" class="form-control" placeholder="비밀번호를 입력하세요" required />
+        </div>
+        <div class="mb-3">
+            <label for="passwordCheck" class="form-label">비밀번호 확인</label>
+            <input type="password" id="passwordCheck" class="form-control" placeholder="비밀번호를 다시 입력하세요" required>
+        </div>
+        <div>
+            <label for="userNick" class="form-label">닉네임</label>
+            <div class="d-flex">
+                <div class="mb-3 ">
+                    <input type="text" id="userNick" name="NickName" class="form-control" placeholder="닉네임을 입력하세요" required />
+                </div>
+                <div class="mb-3">
+                    <input type="button" id="nickCheck" name="nickCheck" class="btn btn-outline-success" onclick="check_Id_Nick(1)" value="닉네임 중복확인" />
+                </div>
+            </div>
+        </div>
+        <div class="ms-3 d-flex">
+            <label class="form-label me-3">성별</label>
+            <div class="d-flex">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="Gender" id="gender1" value="1">
+                    <label class="form-check-label" for="gender1">여성</label>&nbsp;
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="Gender" id="gender2" value="2">
+                    <label class="form-check-label" for="gender2">남성</label>&nbsp;
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="Gender" id="gender3" value="3" checked>
+                    <label class="form-check-label" for="gender3">미지정</label>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-outline-primary" onclick="fCheck()">회원가입</button>&nbsp;
+            <button type="reset" class="btn btn-outline-primary">다시작성</button>&nbsp;
+            <button type="button" class="btn btn-outline-primary" onclick="location.href='@Url.Action("Index", "HOME")';">돌아가기</button>
+        </div>
+    </form>
+    <script>
+        'use strict';
+
+        let check_id_fainal = 0;
+        let check_nick_fainal = 0;
+
+        function fCheck() {
+
+            const regUserID = /^[a-zA-Z0-9_]{4,20}$/;
+            const regUserPW = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@@#$%^&*])[A-Za-z\d!@@#$%^&*]{7,20}$/;
+            const regNickName = /^[가-힣a-zA-Z0-9]{2,10}$/;
+
+            let UserId = document.getElementById("userId").value.trim();
+            let UserPW = document.getElementById("password").value.trim();
+            let pwdCheck = document.getElementById("passwordCheck").value.trim();
+            let NickName = document.getElementById("userNick").value.trim();
+
+            if (!regUserID.test(UserId)) {
+                alert("아이디는 4~20자리의 영문 소/대문자와 숫자, 언더바(_)만 사용가능합니다.");
+                document.getElementById("userId").focus();
+                return false;
+            }
+            else if (check_id_fainal === 0) {
+                alert("아이디 중복체크를 해주세요");
+                document.getElementById("userId").focus();
+                return false;
+            }
+            else if (!regUserPW.test(UserPW)) {
+                alert("비밀번호는 1개이상의 문자와 특수문자 조합의 6~24 자리로 작성해주세요.");
+                document.getElementById("password").focus();
+                return false;
+            }
+            else if (UserPW !== pwdCheck) {
+                alert("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
+                document.getElementById("passwordCheck").focus();
+                return false;
+            }
+            else if (!regNickName.test(NickName)) {
+                alert("닉네임은 한글, 영어, 숫자만 최대 10자리만 사용가능합니다.");
+                document.getElementById("userNick").focus();
+                return false;
+            }
+            else if (check_nick_fainal === 0) {
+                alert("닉네임 중복체크를 해주세요");
+                document.getElementById("userNick").focus();
+                return false;
+            }
+            return true;
+        }
+
+        function check_Id_Nick(type) {
+            let userValue = null;
+            let inputField = $("#exampleInput");
+
+            if (type === 0) {
+                let userIdCondition = $('#userId').val().trim();
+                if (userIdCondition === "") {
+                    alert("아이디를 입력하세요");
+                    document.getElementById("userId").focus();
+                    return false;
+                }
+                console.log($('#userId'));
+
+                userValue = $('#userId').val();
+                inputField = $('#userId');
+            }
+            else if (type === 1) {
+                let userNickCondition = $('#userNick').val().trim();
+                if (userNickCondition === "") {
+                    alert("닉네임을 입력하세요");
+                    document.getElementById("userNick").focus();
+                    return false;
+                }
+                userValue = $('#userNick').val();
+                inputField = $('#userNick');
+            }
+
+            $.ajax({
+                url: '/User/CheckUserIdOrNickName',
+                type: 'POST',
+                data: {
+                    userValue: userValue,
+                    type: type
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (type === 0) {
+                        if (response.isAvailable == true) {
+                            alert("사용 가능한 아이디입니다.");
+                            inputField.prop("readonly", true); 
+                            check_id_fainal = 1;
+                        } else {
+                            alert("중복된 아이디입니다.");
+                            inputField.prop("readonly", false); 
+                            inputField.val(""); 
+                        }
+                    } else if (type === 1) { 
+                        if (response.isAvailable === true) {
+                            alert("사용 가능한 닉네임입니다.");
+                            inputField.prop("readonly", true);
+                            check_nick_fainal = 1;
+                        } else {
+                            alert("중복된 닉네임입니다.");
+                            inputField.prop("readonly", false);
+                            inputField.val("");
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            // 정규식 패턴 정의
+            const regUserID = /^[a-zA-Z0-9_]{4,20}$/; // 아이디 패턴
+            const regUserPW = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@@#$%^&*])[A-Za-z\d!@@#$%^&*]{7,20}$/; // 비밀번호 패턴
+            const regNickName = /^[가-힣a-zA-Z0-9]{2,10}$/; // 닉네임 패턴
+
+            // 입력 필드와 오류 메시지 매핑
+            const fields = [
+                {
+                    id: "userId",
+                    regex: regUserID,
+                    message: "아이디는 4~20자의 영문자, 숫자, 언더바(_)만 사용 가능합니다."
+                },
+                {
+                    id: "password",
+                    regex: regUserPW,
+                    message: "비밀번호는 7~20자의 문자, 숫자, 특수문자를 포함해야 합니다."
+                },
+                {
+                    id: "userNick",
+                    regex: regNickName,
+                    message: "닉네임은 2~10자의 한글, 영문자, 숫자만 사용 가능합니다."
+                }
+            ];
+
+            // 필드별 이벤트 리스너 추가
+            fields.forEach(field => {
+                const input = document.getElementById(field.id);
+
+                const validationMessage = document.createElement("span"); // 오류 메시지 표시 요소
+                validationMessage.className = "text-danger";
+                validationMessage.style.display = "none"; // 초기에는 숨김
+                input.insertAdjacentElement("afterend", validationMessage);
+
+                const idCheckButton = document.getElementById("idCheck"); // 버튼 요소 가져오기
+                const nickCheckButton = document.getElementById("nickCheck"); // 버튼 요소 가져오기
+
+                idCheckButton.disabled = true;
+                nickCheckButton.disabled = true;
+
+                // 입력 이벤트 핸들러
+                input.addEventListener("input", function () {
+                    const value = input.value.trim();
+                    const valueId = input.id;
+
+                    if (field.regex.test(value)) {
+                        validationMessage.style.display = "none"; // 유효하면 메시지 숨김
+                        input.classList.remove("input-validation-error");
+
+                        if (valueId === "userId" && valueId !== "password") {
+                            idCheckButton.disabled = false; // 버튼 활성화
+                        }
+                        else{
+                            nickCheckButton.disabled = false;
+                        }
+                    } else {
+                        validationMessage.style.display = "block"; // 유효하지 않으면 메시지 표시
+                        validationMessage.textContent = field.message;
+                        input.classList.add("input-validation-error");
+                        idCheckButton.disabled = true; // 버튼 비활성화
+                        nickCheckButton.disabled = true;
+                    }
+                });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputPassword = document.getElementById("password"); // 비밀번호 입력 필드
+            const inputPasswordCheck = document.getElementById("passwordCheck"); // 비밀번호 확인 필드
+
+            const validationMessage = document.createElement("span");
+            validationMessage.className = "text-danger";
+            validationMessage.style.display = "none"; // 초기에는 숨김
+            validationMessage.textContent = "비밀번호와 일치하지 않습니다.";
+            inputPasswordCheck.insertAdjacentElement("afterend", validationMessage); // 확인 필드 아래에 추가
+
+            inputPasswordCheck.addEventListener("blur", function () {
+                const passwordValue = inputPassword.value.trim(); // 비밀번호 입력 값
+                const passwordCheckValue = inputPasswordCheck.value.trim(); // 비밀번호 확인 입력 값
+
+                if (passwordCheckValue === passwordValue) {
+                    validationMessage.style.display = "none"; // 메시지 숨김
+                    inputPasswordCheck.classList.remove("input-validation-error");
+
+                } else {
+                    validationMessage.style.display = "block"; // 메시지 표시
+                    inputPasswordCheck.classList.add("input-validation-error");
+                }
+            });
+        });
+
+    </script>
+</div>

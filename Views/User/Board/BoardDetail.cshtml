@@ -1,0 +1,1237 @@
+﻿@{
+    ViewData["Title"] = "BoardDetail";
+}
+@model BoardCreate.Models.Board.BoardDetailModel
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var sanitizedContent = System.Web.HttpUtility.JavaScriptStringEncode(Model.Board.Contents);
+}
+<style>
+    .container2 {
+        display: flex;
+        width: 1200px;
+    }
+
+    .left_container {
+        width: 80%;
+        min-height: 900px;
+        max-height:100%;
+        border: 1px solid lightcoral;
+    }
+
+    .right_container {
+        width: 20%;
+        height: 900px;
+        border: 1px solid #198754;
+    }
+    .qq{
+        border: none;
+        border: 1px solid black;
+    }
+
+    #BoardLike {
+        height: 50px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .BoardLikes{
+        height: 100%;
+        display: flex;
+        align-items: center;
+        width: 9%;
+        justify-content: center;
+        border: 2px solid #abcdff8a; /* 테두리를 솔리드로 설정 */
+        border-radius: 15px; /* 꼭짓점을 둥글게 설정 */
+        /*background-color: #d6e7ff8a;  기본값*/
+        /*background-color: #d6e7ff8a;*/
+        padding: 10px; /* 안쪽 여백 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+    }
+
+    .BoardLikes:hover{
+        background-color: #d6e7ff8a;
+    }
+
+    .rounded-box {
+        border: 2px solid black; /* 테두리를 솔리드로 설정 */
+        border-radius: 15px; /* 꼭짓점을 둥글게 설정 */
+        padding: 10px; /* 안쪽 여백 */
+        width: 200px; /* 박스 너비 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+    }
+
+    .custom-textarea {
+        margin-bottom: -20px;
+        border: none;
+        border-bottom: 1px solid #000; /* 밑줄 스타일 */
+        outline: none; /* 포커스 외곽선 제거 */
+        resize: none; /* 크기 조정 불가 */
+        overflow: hidden; /* 스크롤 제거 */
+        width: 100%; /* 가로 크기 설정 */
+        min-height: 30px; /* 최소 높이 설정 (1줄 크기) */
+        height: 30px; /* 기본 높이 설정 */
+        padding: 5px; /* 내부 여백 */
+        font-size: 16px; /* 글씨 크기 */
+        line-height: 1.5; /* 줄 간격 */
+    }
+
+    .commentsTextMom {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 11px;
+    }    
+    .commentsTextMomR {
+        width: 120.5%;
+        margin: 0 -34px 10px 76px;
+        flex-direction: column;
+    }
+    .commentsButton {
+        display: flex;
+        margin: 10px 0 0 0;
+        width: 6%;
+        background-color: #d6e7ff8a;
+        height: 33px;
+        border-radius: 15px;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+    .commentsButton:hover{
+        background-color: #abcdff8a;
+    }
+
+    #commentsButtonSon{
+    }
+
+    .ButtonDynamicStyle{
+        margin-right: -205px;
+        justify-content: flex-end;
+    }
+
+    .commentsDad{
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 55px;
+        padding: 5px;
+        justify-content: space-around;
+        flex-direction: column;
+    }
+
+    .commentsDaughter{
+        margin: 6px 0 6px 0px;
+        display: flex;
+        width: 85%;
+        height: 100%;
+        align-items: flex-start;
+    }
+
+    .Daughter1{
+        background-color: #c4afef4a;
+        flex: 0.06;
+        text-align: center;
+        height: 44px;
+        border-radius: 18px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .Daughter2 {
+        background-color: #c4afef4a;
+        flex: 0.89;
+        margin: 0 0.5% 0 2%;
+    }
+
+    .commentsLikeMom{
+        display: flex;
+        justify-content: flex-start;
+        width: 72%;
+        margin-top: -1px;
+    }
+    /*
+    .commentsLikeSon1{
+        margin: 0 5px 0 5px;
+    }
+        */
+    .commentsLikeSon1 {
+        margin: 0 5px 0 5px;
+        position: relative; /* overlay-image 위치를 고정하기 위한 설정 */
+        display: inline-block; /* 요소를 인라인 정렬 */
+    }
+    .commentsLikeSon2 {
+        margin: 2px 0px 0 0px;
+        font-size: 14px;
+        position: relative;
+        top: 2px;
+    }
+    .commentsLikeSon3 {
+        margin: 0 5px 0 5px;
+        position: relative;
+        top: 2.1px;
+    }
+    .commentsReple{
+        margin: 0 0 0 25px;
+        position: relative;
+        top: 2.5px;
+        font-size: 16px;
+    }
+
+
+    .overlay-image {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 17px;
+        height: 17px;
+        z-index: 2;
+        transition: opacity 0.3s ease;
+        margin: 8px 0 0 -1px;
+    }
+
+    .replyMom {
+        width: 75%;
+    }
+    .replyDaughter {
+        margin: 2% 0 0 6%;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: flex-start;
+    }
+    .replyLikeMom {
+        display: flex;
+        justify-content: flex-start;
+        width: 61%;
+        margin: -3px 0 0 48px;
+    }
+
+    .ReplyInsertDad{
+        width: 72%;
+        margin: 0 -34px 10px 0px;
+        flex-direction: column;
+    }
+    .ReplyList {
+        width: 75%;
+        margin: 5px 0 2px 1%;
+    }
+    #ReplyDad{
+        width: 670px;
+        margin: 12px 0 -6px 47px;
+        min-height: 50px;
+    }
+    .seeMore{
+        display: flex;
+        justify-content: flex-start;
+        width: 67%;
+        height: 39px;
+        align-items: center;
+    }
+    .seeMore_1{
+        display: flex;
+        border-radius: 12px;
+        width: 13%;
+        height: 87%;
+        justify-content: center;
+        margin-top: 8px;
+        align-items: center;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        color: #4e0a70;
+    }
+
+    .seeMore_1:hover{
+        background-color: #80008014;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/ckeditor/ckeditor.js"></script>
+</head>
+
+<body>          
+    <div class="container2" style="margin-bottom:100px">
+        <div class="left_container">
+            <div class="qq" style="display:flex;">
+                <div class="" style="flex: 0.1;">섹션 사진</div>
+                <div class="qq" style="flex: 0.9;">
+                    <div class="">@Model.Board.SectionName</div>
+                    <div class="">@Model.Board.BoardCreatedAt</div>
+                </div>
+            </div>
+            <div class="qq" style="height: 40px;display: flex; align-items: center;">
+                <div style="margin-right: 8px;">제목 :</div>
+                <div>@Model.Board.Title</div>
+            </div> 
+            <div class="qq">
+               조회수 :  @Model.Board.ViewCount
+            </div>
+            <div class="qq" id="renderedContent" style="min-height: 500px; padding: 10px;">
+                @Html.Raw(Model.Board.Contents)
+            </div>
+            <div class="" id="BoardLike" style="margin-bottom:10px;">
+                @{
+                    var recommendStyle = Model.UserPreferences.LikeStatus == 0 ? "background-color: #d6e7ff8a; margin-right:5px;" : "margin-right:5px;";
+                    var notRecommendStyle = Model.UserPreferences.LikeStatus == 1 ? "background-color: #d6e7ff8a; margin-left:5px;" : "margin-left:5px;";
+                }
+                <div class="BoardLikes" id="recommend" style="@recommendStyle" onclick="UpdateUserPreferences(0)">
+                    추천
+                </div>
+                <div class="BoardLikes" id="notRecommend" style="@notRecommendStyle" onclick="UpdateUserPreferences(1)">
+                    비추천 
+                </div>
+                
+                <input type="hidden" id="boardIdxCheck" value="@Model.Board.IDX"/>
+                <input type="hidden" id="likeStatus" value="@Model.UserPreferences.LikeStatus" />
+                <input type="hidden" id="boardUserId" value="@Model.Board.UserID" />
+                @*<input type="hidden" id="boardUserIDX" value="@Model.Board.UserIDX" />*@
+                <input type="hidden" id="userID" value="@(Model.UserSession?.UserID ?? "guest")"/>
+                <input type="hidden" id="loginUserIDX" value="@(Model.UserSession?.IDX ?? -1)"/>
+                <input type="hidden" id="currentComments" value="0"/>
+                <input type="hidden" id="currentCommentsPlus" value="5"/>
+
+                <input type="hidden" id="currentReplyPlus" value="5" />
+            </div>
+            <div class="" id="commentsReplyAll" style="min-height:200px;">
+                <div id="commentsInsertFirst">
+                    <div class="commentsTextMom" style="">
+                        <div style="flex: 0.1">
+                            <span class="input-group-text">@(Model.UserSession?.UserID ?? "guest")</span>
+                        </div>
+                        <div style="flex: 0.8; margin-left:20px">
+                            <textarea id="textareaComments" class="custom-textarea" placeholder="댓글을 입력하세요"></textarea>
+                        </div>
+                    </div>
+                    
+
+
+
+
+
+
+                    <div id="commentsButtonMom" style="display:none;">
+                        <input class="commentsButton" id="commentsButton1" style="margin-right:5px" value="취소"/>
+                        <input class="commentsButton" id="commentsButton2" style="margin-right:5%;" onclick="commentsInsert(0, 0, -1)" value="등록"/>
+                    </div>
+                </div>
+
+                <div class="commentsDad" id="commentsDad" style="display:none"></div>
+
+
+                <div style="display: flex; justify-content: center;">
+                    <div class="spinner-border text-primary" id="loadingOverlay" role="status" style="display:none">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="right_container">
+            
+        </div>
+    </div>
+</body>
+<script>
+    'use script';
+
+    const commentsButton2 = document.getElementById("commentsButton2");
+    const textareaComments = document.getElementById('textareaComments');
+
+    textareaComments.addEventListener('input', function () {
+        this.style.height = ''; // 높이를 초기화하여 스크롤 높이를 다시 계산
+        this.style.height = this.scrollHeight + 'px'; // 입력 내용에 맞게 높이 설정
+
+        commentsButton2.disabled = false; // 버튼 활성화
+        let textareaValue = textareaComments.value.trim();
+
+        if (textareaValue === "") commentsButton2.disabled = true;
+    });
+
+    textareaComments.addEventListener('click', function () {
+        const userID = document.getElementById("userID").value;
+        if (!userIdCheck()) return;
+
+        const commentsButtonMom = document.getElementById('commentsButtonMom');
+        commentsButtonMom.style = 'display:flex;  justify-content: flex-end;';
+        commentsButton2.disabled = true; // 버튼 활성화
+    });
+
+    const commentsButton1 = document.getElementById('commentsButton1');
+    commentsButton1.addEventListener('click', function () {
+        const commentsButtonMom = document.getElementById('commentsButtonMom');
+        commentsButtonMom.style = 'display:none;';
+        textareaComments.value = '';
+        textareaComments.style.height = '';
+    });
+
+    
+    function commentsInsert(TargetedCommentsIDX, TargetedUserIDXValue, IDX) {
+
+        const WriterIDX = document.getElementById("loginUserIDX").value;
+        if (WriterIDX == -1) {
+            alert('로그인 후 이용가능합니다.');
+            return false;
+        }
+        if (!userIdCheck()) return;
+
+        let commentsContent;
+        if (IDX == -1)  commentsContent = document.getElementById("textareaComments").value;
+        else  commentsContent = document.getElementById(`textareaReply_${IDX}`).value;
+
+        if (commentsContent.trim() === "") { 
+            if (IDX == -1) alert('댓글을 입력하십시오');
+            else  alert('답글을 입력하십시오'); 
+            return false; 
+        }
+        const boardIDX = document.getElementById("boardIdxCheck").value;
+        let type;
+        let TargetedUserIDX;
+
+        if (TargetedUserIDXValue == 0) {
+            TargetedUserIDX = null;
+            type = 0;
+        }
+        else {
+            TargetedUserIDX = TargetedUserIDXValue;
+            type = 1;
+        }
+
+        $.ajax({
+            url: "/User/CommentsInsert",
+            type: "POST",
+            data: {
+                BoardIDX: boardIDX,
+                WriterIDX: WriterIDX,
+                TargetedCommentsIDX: TargetedCommentsIDX,
+                TargetedUserIDX: TargetedUserIDX,
+                CommentsContent: commentsContent,
+                CommentsType: type
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.isAvailable) {
+                    alert('등록 완료.');
+
+                    if(IDX == -1) { // 댓글
+                        const commentsButtonMom = document.getElementById('commentsButtonMom');
+                        commentsButtonMom.style = 'display:none;';
+                        textareaComments.value = '';
+                        InsertCommentsView(response.data, TargetedCommentsIDX, WriterIDX, commentsContent);
+                    }
+                    else{
+                        const ReplyInsert_Dynamic = document.getElementById(`ReplyInsert_${IDX}`);
+                        ReplyInsert_Dynamic.innerHTML = ``;
+                        InsertReplyView(response.data, TargetedCommentsIDX, WriterIDX, commentsContent, IDX);
+                    }
+
+                }
+                else {
+                    alert('다시 시도해주세요 .');
+                }
+            },
+            error: function (xhr, status, error) {
+                // 서버에서 전달받은 메시지를 표시
+                const response = JSON.parse(xhr.responseText);
+                alert(response.message || '알 수 없는 오류가 발생했습니다.');
+            }
+        });
+    }
+    /*
+    function TimeAdjust(timeValue) {
+
+        switch () {
+            case
+        }
+    }
+    */
+
+
+        function InsertCommentsView(commentsIDX, targetedCommentsIDX, writerIDX, commentsContent) {
+
+        const commentsDad = document.getElementById('commentsDad');
+
+        const commentsDad1 = document.createElement(`div`);
+        commentsDad1.id = `commentsDad_${commentsIDX}`;
+        commentsDad1.className = `commentsDad`;
+
+
+        const newDiv1 = document.createElement('div');
+        newDiv1.className = `commentsDaughter`;
+        newDiv1.id = `commentsDaughter_${commentsIDX}`;
+        newDiv1.innerHTML = `
+                <div class="Daughter1">사진</div>
+                <div class="Daughter2">
+                    <div style="display:flex; font-size: 12px;">
+                        <div>
+                             ${writerIDX}
+                        </div>
+                        <div>
+                            <span id="timeShow_${commentsIDX}" class="time-text" data-time=""></span>
+                        </div>
+                    </div>
+                    <div>${commentsContent}</div>
+                </div>
+                <div class="Daughter3" style="flex: 0.01;">3</div>
+            `;
+
+        const newDiv2 = document.createElement('div');
+        newDiv2.className = `commentsLikeMom`;
+        newDiv2.id = `commentsLikeMom_${commentsIDX}`;
+        newDiv2.innerHTML = `
+                <div class="commentsLikeMom">
+                    <div class="commentsLikeSon1">
+                        <img src="/images/thumbsup.png" id="thumbsup_${commentsIDX}" style="width: 14px; height: auto;" alt="thumbs up" onclick="UpdateCommentsLikes(${commentsIDX},0,-1,0)" />
+                    </div>
+                    <div class="commentsLikeSon2" id="commentsLikeSon2Like_${commentsIDX}">0</div>
+                    <div class="commentsLikeSon3">
+                        <img src="/images/thumbsdown.png" id="thumbsdown_${commentsIDX}" style="width: 14px; height: auto;" alt="thumbs down" onclick="UpdateCommentsLikes(${commentsIDX},1,-1,0)" />
+                    </div>
+                    <div class="commentsLikeSon2"  id="commentsLikeSon2Bad_${commentsIDX}">0</div>
+                    <div class="commentsReple" id="commentsReple_Mom" onclick="InsertReply(${commentsIDX},${targetedCommentsIDX},${writerIDX},${commentsIDX})">
+                        답글
+                    </div>
+                    <input type="hidden" id="comments_LikeStatus_${commentsIDX}" value="2"/>
+                </div>
+            `;
+        
+        const ReplyInsertDiv = document.createElement('div');
+        ReplyInsertDiv.id = `ReplyInsert_${commentsIDX}`
+        ReplyInsertDiv.className = `ReplyInsertDad`
+
+        commentsDad.prepend(commentsDad1);
+
+        commentsDad1.appendChild(newDiv1);
+        commentsDad1.appendChild(newDiv2);
+        commentsDad1.appendChild(ReplyInsertDiv);
+        document.querySelector("#timeShow_${commentsIDX}").dataset.time = new Date().toISOString();
+    }
+
+
+    function InsertReplyView(commentsIDX, targetedCommentsIDX, writerIDX, commentsContent, IDX) {
+
+        console.log("commentsIDX : " + commentsIDX); //자기 idx
+        console.log("targetedCommentsIDX : " + targetedCommentsIDX); // 댓글 idx 
+
+
+        const replyMom1Div = document.createElement('div');
+        replyMom1Div.id = `replyMom2_${commentsIDX}`;
+
+        const replyDaughterDiv = document.createElement('div');
+        replyDaughterDiv.id = `replyDaughte_${commentsIDX}`;
+        replyDaughterDiv.className = `replyDaughte`;
+        replyDaughterDiv.innerHTML = `
+                            <div class="replyDaughter">
+                                <div class="Daughter1" style="">사진</div>
+                                <div class="Daughter2" style="">
+                                    <div style="display:flex; font-size: 12px;">
+                                        <div>${writerIDX}</div>
+                                        <div>
+                                            <span id="timeShow_${commentsIDX}" class="time-text" data-time=""></span>
+                                        </div>
+                                    </div>
+                                    <div>${commentsContent}</div>
+                                </div>
+                                <div class="Daughter3" style="flex: 0.01;">3</div>
+                            </div>
+                    `;
+        const replyLikeMomDiv = document.createElement('div');
+        replyLikeMomDiv.id = `replyDaughte_${commentsIDX}`;
+        replyLikeMomDiv.className = `replyLikeMom`;
+        replyLikeMomDiv.innerHTML = `
+                    <div class="replyLikeMom">
+                        <div class="commentsLikeSon1">
+                            <img src="/images/thumbsup.png" class="base-image" id="thumbsup_${commentsIDX}" style="width: 14px; height: auto;" alt="thumbs up" onclick="UpdateCommentsLikes(${commentsIDX},0,-1,1)" />
+                        </div>
+                        <div class="commentsLikeSon2" id="commentsLikeSon2Like_${commentsIDX}">0</div>
+                        <div class="commentsLikeSon3">
+                            <img src="/images/thumbsdown.png" id="thumbsdown_${commentsIDX}" style="width: 14px; height: auto;" alt="thumbs down" onclick="UpdateCommentsLikes(${commentsIDX},1,-1,1)" />
+                        </div>
+                        <div class="commentsLikeSon2" id="commentsLikeSon2Bad_${commentsIDX}">0</div>
+                            <div class="commentsReple" id="commentsReple_Mom" onclick="InsertReply(${commentsIDX}, ${targetedCommentsIDX}, ${writerIDX}, ${commentsIDX}) ">
+                                답글
+                            </div>
+                            <input type="hidden" id="reply_LikeStatus_${commentsIDX}" value="2" />
+                        </div>
+                    `;
+        const ReplyInsertDiv = document.createElement('div');
+        ReplyInsertDiv.id = `ReplyInsert_${commentsIDX}`
+        ReplyInsertDiv.className = `ReplyInsertDad`
+
+        if (targetedCommentsIDX == IDX) {
+            
+            let commentsDadDad = document.getElementById(`commentsDad_${targetedCommentsIDX}`);
+            
+            const ReplyDad = document.createElement('div');
+                ReplyDad.id = `replyDad_${targetedCommentsIDX}`;
+                ReplyDad.className = `replyMom`;
+
+            commentsDadDad.appendChild(ReplyDad);
+            ReplyDad.prepend(replyMom1Div);
+       }
+       else{
+            const ReplyTargetId = document.getElementById(`replyMom2_${IDX}`);
+            ReplyTargetId.insertAdjacentElement('afterend', replyMom1Div);
+       }
+        replyMom1Div.appendChild(replyDaughterDiv);
+        replyMom1Div.appendChild(replyLikeMomDiv);
+        replyMom1Div.appendChild(ReplyInsertDiv);
+        document.querySelector("#timeShow_${commentsIDX}").dataset.time = new Date().toISOString();
+    }
+
+    let scrollTrigger = 0;
+    window.addEventListener('scroll', function () {
+        let scrollPosition = window.scrollY + window.innerHeight; // 현재 스크롤 위치
+        let pageHeight = document.documentElement.scrollHeight;  // 전체 페이지 높이
+        const overlay = document.getElementById("loadingOverlay");
+
+        if (scrollTrigger == 0) {
+
+            if (scrollPosition >= Math.ceil(pageHeight - 1)) {
+                scrollTrigger = 1;
+                overlay.style.display = "flex";
+
+                setTimeout(() => {
+                    CommentsReplyDynamicSelect(0); 
+                    isThrottled = false; 
+                }, 2000); 
+
+                return false;
+            }
+        }
+    });
+    
+    function CommentsReplyDynamicSelect(targetedCommentsIDX) {
+        /*
+        const element = document.getElementById("targetID"); // 특정 ID 선택
+        const displayValue = window.getComputedStyle(element).display; // display 값 가져오기
+        */
+        const boardIdx = document.getElementById("boardIdxCheck").value;
+        let replyCount;
+
+        let currentComments;
+        let currentCommentsValue;
+        let currentCommentsPlus;
+
+        if(targetedCommentsIDX == 0){
+            currentComments = document.getElementById("currentComments");
+            currentCommentsPlus = document.getElementById("currentCommentsPlus").value
+        }
+        else{
+            currentComments = document.getElementById(`currentReply_${targetedCommentsIDX}`);
+            currentCommentsPlus = document.getElementById("currentReplyPlus").value
+            currentCommentsValue = currentComments.value;
+
+            const ReplyDad = document.getElementById(`replyDad_${targetedCommentsIDX}`);
+            if (ReplyDad.style.display === "none") {
+                ReplyDad.style.display = 'block';
+                let seeMore1ID = document.getElementById(`seeMore1_${targetedCommentsIDX}`);
+                seeMore1ID.outerHTML = `<div id="seeMore1_${targetedCommentsIDX}" class="seeMore_1" onclick="SeeMoreClose(${targetedCommentsIDX})">답글 닫기</div>`;
+            }
+        }
+
+        $.ajax({
+            url: "/User/CommentsReplyDynamicSelect",
+            type: "POST",
+            data: {
+                BoardIDX: boardIdx,
+                TargetedCommentsIDX: targetedCommentsIDX,
+                CurrentComments: currentComments.value,
+                CurrentCommentsPlus: currentCommentsPlus
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.isAvailable) {
+
+                    let commentsData = [];
+                    commentsData = [...response.data];
+
+                    if (targetedCommentsIDX == 0) {
+                        console.log(commentsData[3]);
+                        DynamicCommentsView(commentsData);
+
+                        const overlay = document.getElementById("loadingOverlay");
+                        overlay.style.display = "none";
+                    }
+                    else{
+                        console.log(commentsData[0]);
+                        DynamicReplyView(commentsData);
+                    }
+                    updateAllTimeElements();
+
+                    let currentCommentsSum;
+                    let DynamicPlusValue = currentCommentsPlus;
+
+                    if (commentsData.length < +currentCommentsPlus)  DynamicPlusValue = commentsData.length
+
+                    if (targetedCommentsIDX == 0) currentCommentsSum = +currentComments.value + +DynamicPlusValue;
+                    else currentCommentsSum = +currentCommentsValue + +DynamicPlusValue;
+
+                    currentComments.value = currentCommentsSum;
+                    
+                    return false;
+                }
+                else {
+                    const overlay = document.getElementById("loadingOverlay");
+                    overlay.style.display = "none";
+                }
+            },
+            error: function (xhr, status, error) {
+                const response = JSON.parse(xhr.responseText); // 문제 발생 가능
+                alert(response.message || '알 수 없는 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    // 현재 시간과 비교하여 시간 차이를 반환하는 함수
+    function formatTimeDifference(pastTime) {
+        const now = new Date();
+        const past = new Date(pastTime);
+        const diffInMinutes = Math.floor((now - past) / (1000 * 60)); // 분 단위 변환
+
+        if (diffInMinutes < 1) return "방금 전";
+        if (diffInMinutes < 3) return "3분 전";
+        if (diffInMinutes < 10) return "10분 전";
+        if (diffInMinutes < 30) return "30분 전";
+        if (diffInMinutes < 60) return "1시간 전";
+
+        const diffInHours = Math.floor(diffInMinutes / 60); 
+        if (diffInHours < 3) return "3시간 전";
+        if (diffInHours < 10) return "10시간 전";
+        if (diffInHours < 22) return "22시간 전";
+        if (diffInHours < 24) return "1일 전";
+
+        const diffInDays = Math.floor(diffInHours / 24);
+        if (diffInDays < 10) return "10일 전";
+        if (diffInDays < 30) return "30일 전";
+
+        const diffInMonths = Math.floor(diffInDays / 30);
+        if (diffInMonths < 5) return "5달 전";
+        if (diffInMonths < 12) return "1년 전";
+
+        const diffInYears = Math.floor(diffInMonths / 12);
+        if (diffInYears < 10) return "10년 전";
+
+        return "10년 이상";
+    }
+    // 모든 시간을 한 번에 업데이트하는 함수
+    function updateAllTimeElements() {
+        const timeElements = document.querySelectorAll(".time-text"); // 모든 시간 표시 요소 선택
+        console.log("Asdddf");
+        timeElements.forEach(element => {
+            const pastTime = element.getAttribute("data-time");
+            const newText = formatTimeDifference(pastTime);
+
+            // 기존 텍스트와 다를 때만 업데이트 → 불필요한 연산 방지
+            if (element.innerText !== newText) {
+                element.innerText = newText;
+            }
+        });
+    }
+    // 1분마다 모든 시간 업데이트
+    setInterval(updateAllTimeElements, 60000);
+
+    // 초기 실행 
+    updateAllTimeElements();
+
+
+    function DynamicCommentsView(commentsData) {
+
+        let currentComments = document.getElementById("currentComments").value;
+        const commentsDad = document.getElementById('commentsDad');
+        const userID = document.getElementById("userID").value;
+
+        commentsDad.style = 'display:flex;'
+
+        for (let i = 0; i < commentsData.length; i++) {
+
+            const CommentsDadID = document.getElementById(`commentsDad_${commentsData[i].IDX}`);
+            if (CommentsDadID) CommentsDadID.remove();
+
+            const newDiv = document.createElement('div');
+            newDiv.id = `commentsDad_${commentsData[i].IDX}`;
+            newDiv.className = `commentsDad`;
+
+
+            const newDiv1 = document.createElement('div');
+            newDiv1.className = `commentsDaughter`;
+            newDiv1.id = `commentsDaughter${commentsData[i].IDX}`;
+            newDiv1.innerHTML = `
+                <div class="Daughter1">사진</div>
+                <div class="Daughter2"> 
+                    <div style="display:flex; font-size: 12px;">
+                        <div>
+                            ${commentsData[i].WriterID}
+                        </div>
+                        <div>
+                            <span id="timeShow_${commentsData[i].IDX}" class="time-text" data-time="${commentsData[i].CommentsUpdatedAt}"></span>
+                        </div>
+                    </div>
+                    <div>${commentsData[i].CommentsContent}</div>
+                </div>
+                <div class="Daughter3" style="flex: 0.01;">3</div>
+            `;
+
+            let upCheck = '';
+            let downCheck = '';
+            if(userID == commentsData[i].WriterID){
+                if (commentsData[i].LikeStatus == 0) upCheck = 'Check'
+                else if(commentsData[i].LikeStatus == 1) downCheck = 'Check'
+            }
+            const newDiv2 = document.createElement('div');
+            newDiv2.id = `commentsLikeMom_${commentsData[i].IDX}`;
+            newDiv2.className = `commentsLikeMom`;
+            newDiv2.innerHTML = `
+                <div class="commentsLikeMom">
+                    <div class="commentsLikeSon1">
+                        <img src="/images/thumbsup${upCheck}.png" class="base-image" id="thumbsup_${commentsData[i].IDX}" style="width: 14px; height: auto;" alt="thumbs up" onclick="UpdateCommentsLikes(${commentsData[i].IDX},0,${commentsData[i].LikeStatus},0)" />
+                        <img src="/images/thumbs_No.png" id="thumbsUpNo_${commentsData[i].IDX}" class="overlay-image"/>
+                    </div>
+                    <div class="commentsLikeSon2" id="commentsLikeSon2Like_${commentsData[i].IDX}">${commentsData[i].LikeCount}</div>
+                    <div class="commentsLikeSon3">
+                        <img src="/images/thumbsdown${downCheck}.png" id="thumbsdown_${commentsData[i].IDX}" style="width: 14px; height: auto;" alt="thumbs down" onclick="UpdateCommentsLikes(${commentsData[i].IDX},1,${commentsData[i].LikeStatus},0)" />
+                        <img src="/images/thumbs_No.png" id="thumbsDownNo_${commentsData[i].IDX}" style="margin-top : 5px" class="overlay-image"/>
+                    </div>
+                    <div class="commentsLikeSon2" id="commentsLikeSon2Bad_${commentsData[i].IDX}">${commentsData[i].BadCount}</div>
+                    <div class="commentsReple" id="commentsReple_Mom" onclick="InsertReply(${commentsData[i].IDX}, ${commentsData[i].TargetedCommentsIDX}, ${commentsData[i].WriterIDX}, ${commentsData[i].IDX}) ">
+                        답글
+                    </div>
+                    <input type="hidden" id="comments_LikeStatus_${commentsData[i].IDX}" value="${commentsData[i].LikeStatus}"/>
+                </div>
+            `;
+
+
+            const ReplyInsertDiv = document.createElement('div');
+            ReplyInsertDiv.id = `ReplyInsert_${commentsData[i].IDX}`
+            ReplyInsertDiv.className = `ReplyInsertDad`
+
+            commentsDad.appendChild(newDiv);
+            let commentsDadDad = document.getElementById(`commentsDad_${commentsData[i].IDX}`);
+
+            commentsDadDad.appendChild(newDiv1);
+            commentsDadDad.appendChild(newDiv2);
+            commentsDadDad.appendChild(ReplyInsertDiv);
+
+            if (commentsData[i].ReplyCount != 0) {
+                const ReplyDad = document.createElement('div');
+                ReplyDad.id = `replyDad_${commentsData[i].IDX}`;
+                ReplyDad.className = `replyMom`;
+
+                const seeMore = document.createElement('div');
+                seeMore.id = `seeMore_${commentsData[i].IDX}`;
+                seeMore.className = `seeMore`;
+                seeMore.innerHTML = `
+                    <div id="seeMore1_${commentsData[i].IDX}" class="seeMore_1" onclick="CommentsReplyDynamicSelect(${commentsData[i].IDX})">답글 ${commentsData[i].ReplyCount}개</div>
+                    <input type="hidden" id="currentReply_${commentsData[i].IDX}" value="0"/>
+                    <input type="hidden" id="currentReplyCount_${commentsData[i].IDX}" value="${commentsData[i].ReplyCount}"/>
+                `;
+
+                commentsDadDad.appendChild(ReplyDad);
+                commentsDadDad.appendChild(seeMore);
+            }
+
+        }
+        scrollTrigger = 0;
+    }
+
+    function SeeMoreClose(TargetedCommentsIDX) {
+        const seeMore1ID = document.getElementById(`seeMore1_${TargetedCommentsIDX}`);
+        const ReplyDad = document.getElementById(`replyDad_${TargetedCommentsIDX}`);
+
+        if (ReplyDad.style.display === "none") {
+            ReplyDad.style.display = 'block';
+        }
+        else {
+            ReplyDad.style.display = 'none';
+            seeMore1ID.outerHTML = `<div id="seeMore1_${TargetedCommentsIDX}" class="seeMore_1" onclick="CommentsReplyDynamicSelect(${TargetedCommentsIDX})">댓글 더 보기</div>`;
+        }
+    }
+
+    function DynamicReplyView(replyData) {
+
+        // IDX가 있는 데이터만 필터링
+        replyData = replyData.filter(item => item && typeof item.IDX !== 'undefined');
+
+        const ReplyDad = document.getElementById(`replyDad_${replyData[0].TargetedCommentsIDX}`);
+        const currentReplyCount = document.getElementById(`currentReplyCount_${replyData[0].TargetedCommentsIDX}`).value;
+        const currentReplyPlus = document.getElementById("currentReplyPlus").value;
+
+        if (replyData.length == +currentReplyPlus) {
+            let seeMore1ID = document.getElementById(`seeMore1_${replyData[0].TargetedCommentsIDX}`);
+
+            if (currentReplyCount > +currentReplyPlus) {
+                seeMore1ID.outerHTML = `<div id="seeMore1_${replyData[0].TargetedCommentsIDX}" class="seeMore_1" class="seeMore_1" onclick="CommentsReplyDynamicSelect(${replyData[0].TargetedCommentsIDX})">댓글 더 보기</div>`;
+            }
+            else{
+                seeMore1ID.outerHTML = `<div id="seeMore1_${replyData[0].TargetedCommentsIDX}" class="seeMore_1" class="seeMore_1" onclick="SeeMoreClose(${replyData[0].TargetedCommentsIDX})">답글 닫기</div>`;
+            }
+        }
+        else{
+            let seeMore1ID = document.getElementById(`seeMore1_${replyData[0].TargetedCommentsIDX}`);
+            seeMore1ID.outerHTML = `<div id="seeMore1_${replyData[0].TargetedCommentsIDX}" class="seeMore_1" onclick="SeeMoreClose(${replyData[0].TargetedCommentsIDX})">답글 닫기</div>`;
+        }
+
+        for (let i = 0; i < replyData.length; i++) {
+
+            if (!replyData[i] || typeof replyData[i].IDX === 'undefined')  break; 
+
+            const replyMomID = document.getElementById(`replyMom2_${replyData[i].IDX}`);
+            if (replyMomID)  replyMomID.remove();
+
+            const replyMom1Div = document.createElement('div');
+            replyMom1Div.id = `replyMom2_${replyData[i].IDX}`;
+
+            const replyDaughterDiv = document.createElement('div');
+            replyDaughterDiv.id = `replyDaughte_${replyData[i].IDX}`;
+            replyDaughterDiv.className = `replyDaughte`;
+            replyDaughterDiv.innerHTML = `
+                        <div class="replyDaughter">
+                            <div class="Daughter1" style="">사진</div>
+                            <div class="Daughter2" style="">
+                                <div style="display:flex; font-size: 12px;">
+                                <div>${replyData[i].WriterID}</div>
+                                <div>
+                                    <span id="timeShow_${replyData[i].IDX}" class="time-text" data-time="${replyData[i].CommentsUpdatedAt}"></span>
+                                </div>
+                                </div>
+                                    <div>${replyData[i].CommentsContent}</div>
+                            </div>
+                            <div class="Daughter3" style="flex: 0.01;">3</div>
+                        </div>
+                `;
+
+            let upCheck = '';
+            let downCheck = '';
+
+            const userID = document.getElementById("userID").value;
+            if (userID == replyData[i].WriterID) {
+                if (replyData[i].LikeStatus == 0) upCheck = 'Check'
+                else if (replyData[i].LikeStatus == 1) downCheck = 'Check'
+            }
+
+            const replyLikeMomDiv = document.createElement('div');
+            replyLikeMomDiv.id = `replyDaughte_${replyData[i].IDX}`;
+            replyLikeMomDiv.className = `replyLikeMom`;
+            replyLikeMomDiv.innerHTML = `
+                <div class="replyLikeMom">
+                    <div class="commentsLikeSon1">
+                        <img src="/images/thumbsup${upCheck}.png" class="base-image" id="thumbsup_${replyData[i].IDX}" style="width: 14px; height: auto;" alt="thumbs up" onclick="UpdateCommentsLikes(${replyData[i].IDX},0,${replyData[i].LikeStatus},1)" />
+                        <img src="/images/thumbs_No.png" id="thumbsUpNo_${replyData[i].IDX}" class="overlay-image"/>
+                    </div>
+                    <div class="commentsLikeSon2" id="commentsLikeSon2Like_${replyData[i].IDX}">${replyData[i].LikeCount}</div>
+                    <div class="commentsLikeSon3">
+                        <img src="/images/thumbsdown${downCheck}.png" id="thumbsdown_${replyData[i].IDX}" style="width: 14px; height: auto;" alt="thumbs down" onclick="UpdateCommentsLikes(${replyData[i].IDX},1,${replyData[i].LikeStatus}, 1)" />
+                        <img src="/images/thumbs_No.png" id="thumbsDownNo_${replyData[i].IDX}" style="margin-top : 5px" class="overlay-image"/>
+                    </div>
+                    <div class="commentsLikeSon2" id="commentsLikeSon2Bad_${replyData[i].IDX}">${replyData[i].BadCount}</div>
+                        <div class="commentsReple" id="commentsReple_Mom" onclick="InsertReply(${replyData[i].IDX}, ${replyData[i].TargetedCommentsIDX}, ${replyData[i].WriterIDX}, ${replyData[i].IDX}) ">
+                            답글
+                        </div>
+                        <input type="hidden" id="reply_LikeStatus_${replyData[i].IDX}" value="${replyData[i].LikeStatus}" />
+                    </div>
+                `;
+
+            const ReplyInsertDiv = document.createElement('div');
+            ReplyInsertDiv.id = `ReplyInsert_${replyData[i].IDX}`
+            ReplyInsertDiv.className = `ReplyInsertDad`
+
+            ReplyDad.appendChild(replyMom1Div);
+            replyMom1Div.appendChild(replyDaughterDiv);
+            replyMom1Div.appendChild(replyLikeMomDiv);
+            replyMom1Div.appendChild(ReplyInsertDiv);
+        }
+    }
+
+    function InsertReply(IdIDX, TargetedCommentsIDX, WriterIDX, IDX) {
+        if (!userIdCheck()) return;
+        const ReplyInsert1 = document.getElementById(`ReplyInsert_${IDX}`);
+        ReplyInsert1.style = "display: flex;"
+
+        if (replyInsertDynamicIDX != null && replyInsertDynamicIDX != IdIDX) {
+            let ReplyInsert_Dynamic = document.getElementById(`ReplyInsert_${replyInsertDynamicIDX}`);
+            ReplyInsert_Dynamic.innerHTML = ``;
+        }
+        replyInsertDynamicIDX = IDX;
+
+        let targetedCommentsIDX;
+
+        let DynamicClass;
+        let ButtonDynamicStyle;
+        if (TargetedCommentsIDX == 0) { // 댓글 <- 답글
+            targetedCommentsIDX = IDX
+            DynamicClass = `commentsTextMom`;
+        }
+        else {
+            targetedCommentsIDX = TargetedCommentsIDX // 답글 <- 답글
+            DynamicClass = `commentsTextMomR`;
+            ButtonDynamicStyle = ` ButtonDynamicStyle`;
+            // 여기에 태그 id 적기
+        }
+
+        ReplyInsert1.innerHTML = `
+                <div class="${DynamicClass}" style="">
+                    <div style="width: 100%; margin-left:20px">
+                    <textarea id="textareaReply_${IDX}" class="custom-textarea" placeholder="답글을 입력하세요"></textarea>
+                </div>
+            </div>
+            <div id="ReplyButtonMom_${IDX}" class="${ButtonDynamicStyle}" style="display:none;">
+                <input class="commentsButton" id="commentsReplyCancel_${IDX}" style="margin-right:5px;width: 53px;" value="취소" />
+                <input class="commentsButton" id="commentsReplyProgress_${IDX}" style="margin-right:5px;width: 53px;" onclick="commentsInsert(${targetedCommentsIDX}, ${WriterIDX}, ${IDX})" value="등록" />
+            </div>
+            `;
+    }
+
+
+    let replyInsertDynamicIDX = null;
+    let replyTextareaComments;
+    document.addEventListener("DOMContentLoaded", function () {
+        // 부모 요소에서 클릭 이벤트 위임 처리
+        document.addEventListener("click", function (event) {
+            // '답글' 버튼 클릭 확인 (클래스나 ID로 구분 가능)
+
+            const commentsReplyProgress = document.getElementById(`commentsReplyProgress_${replyInsertDynamicIDX}`);
+            const commentsButtonMom = document.getElementById(`ReplyButtonMom_${replyInsertDynamicIDX}`);
+            replyTextareaComments = document.getElementById(`textareaReply_${replyInsertDynamicIDX}`);
+
+            if (event.target && event.target.matches("#commentsReple_Mom")) {
+
+                replyTextareaComments.addEventListener('input', function () {
+                    this.style.height = ''; // 높이를 초기화하여 스크롤 높이를 다시 계산
+                    this.style.height = this.scrollHeight + 'px'; // 입력 내용에 맞게 높이 설정
+                    
+                    commentsReplyProgress.disabled = false; // 버튼 활성화
+                    let textareaValue = replyTextareaComments.value.trim();
+
+                    if (textareaValue === "") commentsReplyProgress.disabled = true;
+                });
+
+                const commentsReplyCancel = document.getElementById(`commentsReplyCancel_${replyInsertDynamicIDX}`);
+                commentsReplyCancel.addEventListener('click', function () {
+                    commentsButtonMom.style = 'display:none;';
+                    textareaComments.value = '';
+                    textareaComments.style.height = '';
+
+                    let ReplyInsert_Dynamic = document.getElementById(`ReplyInsert_${replyInsertDynamicIDX}`);
+                    ReplyInsert_Dynamic.innerHTML = ``;
+
+                    replyInsertDynamicIDX == null;
+                    InputTextareaCheck = 2;
+                });
+
+                replyTextareaComments.addEventListener('click', function () {
+                    const userID = document.getElementById("userID").value;
+                    if (!userIdCheck()) return;
+
+                    InputTextareaCheck = 0;
+                 
+                    commentsButtonMom.style = 'display:flex;  justify-content: flex-end;';
+                    commentsReplyProgress.disabled = true; // 버튼 활성화
+                });
+            }
+
+        });
+    });
+    /*
+
+            replyTextareaComments.addEventListener('input', function () {
+                this.style.height = ''; // 높이를 초기화하여 스크롤 높이를 다시 계산
+                this.style.height = this.scrollHeight + 'px'; // 입력 내용에 맞게 높이 설정
+
+                const commentsReplyProgress = document.getElementById(`commentsReplyProgress_${replyDynamicIDX}`);
+
+                commentsReplyProgress.disabled = false; // 버튼 활성화
+                let textareaValue = replyTextareaComments.value.trim();
+
+                if (textareaValue === "") commentsButton2.disabled = true;
+            });
+
+            replyTextareaComments.addEventListener('click', function () {
+                const userID = document.getElementById("userID").value;
+                if (!userIdCheck()) return;
+
+                InputTextareaCheck = 0;
+                const commentsReplyProgress = document.getElementById(`commentsReplyProgress_${replyDynamicIDX}`);
+                const commentsButtonMom = document.getElementById(`ReplyButtonMom_${replyDynamicIDX}`);
+                commentsButtonMom.style = 'display:flex;  justify-content: flex-end;';
+                commentsReplyProgress.disabled = true; // 버튼 활성화
+            });
+
+            const commentsReplyCancel = document.getElementById(`commentsReplyCancel_${replyDynamicIDX}`);
+            commentsReplyCancel.addEventListener('click', function () {
+                const commentsButtonMom = document.getElementById(`ReplyButtonMom_${replyDynamicIDX}`);
+                commentsButtonMom.style = 'display:none;';
+                textareaComments.value = '';
+                textareaComments.style.height = '';
+                InputTextareaCheck = 2;
+            });
+        });
+
+    });
+
+
+    */
+    function UpdateCommentsLikes(commentsIdx, type, currentLikeStatus , commentsReplyCheck) {
+
+        const userID = document.getElementById("userID").value;
+        let LikeStatus;
+        
+        if (commentsReplyCheck == 0)   LikeStatus = document.getElementById(`comments_LikeStatus_${commentsIdx}`);
+        else  LikeStatus = document.getElementById(`reply_LikeStatus_${commentsIdx}`);
+
+        if (userID == "guest") {
+            alert("로그인 후 이용가능합니다.");
+            return false;
+        }
+        
+        $.ajax({
+            url: "/User/UpdateCommentsLikes",
+            type: "POST",
+            data: {
+                CommentsIdx: commentsIdx,
+                UserID: userID,
+                Likestype: type,
+                CurrentLikeStatus: LikeStatus.value
+            },
+            dataType: 'json',
+            success: function (response) {
+                switch (response.data.ProgressStatus) {
+                    case 0:
+                        ViewUpdateCommentsLikes(commentsIdx, type, response.data, LikeStatus.value);
+                        if (type == LikeStatus.value)  LikeStatus.value = 2;
+                        else if (type != LikeStatus.value)  LikeStatus.value = type;
+                        break;
+                    case 1:
+                        showOverlayImage(commentsIdx, type);
+                        ViewUpdateCommentsLikes(commentsIdx, type, response.data, LikeStatus.value);
+                        break;
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+
+    }
+    function showOverlayImage(commentsIdx, LikeType) {
+        let thumbsNo = "";
+        if (LikeType == 0)  thumbsNo = document.getElementById(`thumbsUpNo_${commentsIdx}`);
+        else  thumbsNo = document.getElementById(`thumbsDownNo_${commentsIdx}`);
+
+
+        thumbsNo.style.display = "block"; // 표시
+        setTimeout(() => {
+            thumbsNo.style.opacity = "1"; // 서서히 나타남
+        }, 5); // 약간의 딜레이로 애니메이션 시작
+
+        setTimeout(() => {
+            thumbsNo.style.opacity = "0"; // 서서히 사라짐
+            setTimeout(() => {
+                thumbsNo.style.display = "none"; // 완전히 숨김
+            }, 300); // opacity 전환 시간(0.3초) 후
+        }, 1000); // 2초 동안 유지
+    }
+    function ViewUpdateCommentsLikes(commentsIdx, likestype, data, LikeStatus) {
+
+        if (data.ProgressStatus == 0) {
+            DynamicLikeCountShowLike(commentsIdx, data.LikeCount);
+            DynamicLikeCountShowBad(commentsIdx, data.BadCount);
+            let CheckLike = ""
+            let CheckBad = ""
+
+            if (likestype != LikeStatus) {
+                if (likestype == 0) {
+                    CheckLike = 'Check'
+                    CheckBad = ""
+                }
+                else {
+                    CheckLike = ""
+                    CheckBad = 'Check'
+                }
+            }
+            document.getElementById(`thumbsup_${commentsIdx}`).src = `/images/thumbsup${CheckLike}.png`;
+            document.getElementById(`thumbsdown_${commentsIdx}`).src = `/images/thumbsdown${CheckBad}.png`;
+        }
+        else {
+            DynamicLikeCountShowLike(commentsIdx, data.LikeCount);
+            DynamicLikeCountShowBad(commentsIdx, data.BadCount);
+        }
+    }
+    function DynamicLikeCountShowLike(IDX, Count) {
+        document.getElementById(`commentsLikeSon2Like_${IDX}`).innerText = Count;
+    }
+    function DynamicLikeCountShowBad(IDX, Count) {
+        document.getElementById(`commentsLikeSon2Bad_${IDX}`).innerText = Count;
+    }
+
+    let BoardLikesValue = -1;
+    function UpdateUserPreferences(type) {
+        let boardIdx = document.getElementById("boardIdxCheck").value;
+        let userId = document.getElementById("userID").value;
+        let likeStatus = document.getElementById("likeStatus").value;
+
+        if(userId == 'guest') {
+            alert('로그인 후 추천 가능합니다.');
+            return false;
+        }
+
+        if (BoardLikesValue == -1 && likeStatus == type) {
+            if (type == 0) alert('이미 추천하셨습니다.');
+            else alert('이미 비추천하셨습니다.');
+            return false;
+        }
+
+        if (BoardLikesValue == type) {
+            if (type == 0)  alert('이미 추천하셨습니다.');
+            else alert('이미 비추천하셨습니다.');
+            return false;
+        }
+
+        $.ajax({
+            url: "/User/UpdateUserPreferencesLikeStatus",
+            type: "POST",
+            data: {
+                BoardIDX: boardIdx,
+                UpdateType: type,
+                UserID : userId
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.isAvailable) {
+                    BoardLikesValue = type;
+                     if (type === 0) {
+                        document.getElementById('recommend').style.backgroundColor = '#d6e7ff8a';
+                        document.getElementById('notRecommend').style.backgroundColor = '';
+                    } else {
+                        document.getElementById('recommend').style.backgroundColor = '';
+                        document.getElementById('notRecommend').style.backgroundColor = '#d6e7ff8a';
+                    }
+                }
+                else {
+                    alert('다시 시도해주세요 .');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+    }
+    function userIdCheck() {
+        const userID = document.getElementById("userID").value;
+        if (userID == "guest") {
+            alert("로그인이 필요합니다");
+            return false;
+        }
+        return true;
+    };
+    // ckediter
+    document.getElementById('renderedContent').innerHTML = '@sanitizedContent'.trim();
+</script>
+

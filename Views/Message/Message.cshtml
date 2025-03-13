@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Message";
+}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Message</title>
+    <script>
+        'use strict';
+
+        // 골뱅이Html.Raw()를 사용하여 중복 HTML 인코딩 방지
+        let msg = decodeURIComponent('@Html.Raw(ViewBag.Message)');
+        let url = decodeURIComponent('@Html.Raw(ViewBag.RedirectUrl)');
+
+        alert(msg);
+        location.href = url;
+    </script>
+</head>
+<body>
+</body>
+</html>

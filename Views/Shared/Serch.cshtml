@@ -1,0 +1,46 @@
+﻿<style>
+    #serch_main {
+        display: flex; /* Flexbox 사용 */
+        align-items: center; /* 세로 정렬 중앙 */
+        justify-content: center; /* 가로 정렬 중앙 */
+        padding: 10px;
+        width: 80%; /* 부모 요소의 80%로 설정 */
+        max-width: 1200px; /* 최대 크기 제한 */
+        height: 100px; /* 원하는 높이 설정 */
+        box-sizing: border-box; /* 패딩 포함 크기 계산 */
+    }
+
+    #serch_main input[type="text"] {
+        flex-grow: 0.3; /* 입력 박스를 유동적으로 늘림 */
+        height: 50px; /* 입력 박스 높이 */
+        font-size: 18px; /* 텍스트 크기 */
+        padding: 10px; /* 내부 여백 */
+        margin-right: 10px; /* 버튼과 간격 */
+    }
+
+    #serch_main button {
+        height: 50px; /* 버튼 높이를 입력 박스와 맞춤 */
+        font-size: 16px; /* 버튼 텍스트 크기 */
+        padding: 0 20px; /* 버튼 좌우 여백 */
+    }
+
+    .container_1 {
+        width: 100%;
+        height: 20vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+</style> 
+
+<div class="container_1">
+    <div id="serch_main">
+        <span>사진</span>
+        <input type="text" placeholder="검색어를 입력하세요">
+        <button>검색</button>
+
+        <button type="button" class="btn btn-outline-primary" onclick="location.href='@Url.Action("AdminMain", "Admin")';">관리자페이지</button>
+
+    </div>
+</div>

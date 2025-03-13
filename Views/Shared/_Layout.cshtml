@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BoardCreate</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BoardCreate.styles.css" asp-append-version="true" />
+</head>
+@inject IHttpContextAccessor HttpContextAccessor
+<style>
+    .container_body {
+        min-height: 1079px;
+        max-height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+    }
+    .fixed-footer {
+        position: fixed; /* 고정 위치 지정 */
+        width: 100%; /* 화면 너비 전체를 차지 */
+        background-color: #f8f9fa; /* 배경색 지정 */
+        padding: 10px 0; /* 위아래 여백 */
+        z-index: 1000; /* 다른 요소 위로 오도록 설정 */
+    }
+
+</style>
+<script>
+    function updateUserRecentViewLists() {
+        $.ajax({
+            url: "/User/UpdateUserRecentViewLists",
+            type: 'POST',
+            data: {
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.isAvailable) {
+                    let commentsData = [];
+                    recentList = [...response.data];
+                    console.log(recentList[0]);
+                    recentListSet(recentList);
+
+
+
+                } 
+                else {
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    function recentListSet() {
+        for(let i = 0; i <  ){
+
+        }
+    }
+
+</script>
+<body>
+    @*여기에 조건으로 특정 세션 (관리자 페이지 접속 성공시 발급) 될때는 사용 불가*@
+    @if (@HttpContextAccessor.HttpContext.Session.GetString("manager") == null)
+    {
+        @Html.Partial("Serch")
+    }
+
+    <div class="container_body">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @if (@HttpContextAccessor.HttpContext.Session.GetString("manager") == null)
+    {
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - BoardCreate - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @Html.Partial("_Notification")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>
