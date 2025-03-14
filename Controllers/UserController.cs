@@ -193,23 +193,30 @@ namespace BoardCreate.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUserRecentViewLists()
         {
+            List<BoardModel> recontList_Every = await _userService.GetBoardRecentListAllService();
+            List<BoardModel> recontList_My = null;
+
             var userRecent = _cookieService.GetCookie<List<string>>("userRecentBoardDetail") ?? null;
             if (userRecent != null)
             {
-                List<BoardModel> boardModels = await _userService.GetBoardRecentListService(userRecent);
-                var response = new
-                {
-                    isAvailable = true, // 여기선 항상 true
-                    data = boardModels
-                };
-                return Json(response);
+                recontList_My = await _userService.GetBoardRecentListMyService(userRecent);
             }
-            else
+
+            int isAvailable = 0;
+            if (recontList_Every?.Any() == true) isAvailable += 1; // `recontList_Every`가 있으면 1 추가
+            if (recontList_My?.Any() == true) isAvailable += 2;    // `recontList_My`가 있으면 2 추가
+
+            var response = new
             {
-                Console.WriteLine("쿠키 데이터 없음.");
-                return Json("false");
-            }
+                isAvailable,
+                data_recontList_Every = recontList_Every,
+                data_recontList_My = recontList_My
+            };
+
+            return Json(response);
         }
+
+
 
 
         #endregion

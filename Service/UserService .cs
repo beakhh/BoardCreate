@@ -226,13 +226,18 @@ namespace BoardCreate.Service
             return commentsLikesModel;
         }
 
-        public async Task<List<BoardModel>> GetBoardRecentListService(List<string> userRecent)
+        public async Task<List<BoardModel>> GetBoardRecentListMyService(List<string> userRecent)
         {
-            List<BoardModel> recentList = await _boardRepository.GetBoardRecentListRepository(userRecent);
+            List<BoardModel> recentListMy = await _boardRepository.GetBoardRecentListMyRepository(userRecent);
 
-            return recentList;
+            return recentListMy;
+        }        
+
+        public async Task<List<BoardModel>> GetBoardRecentListAllService()
+        {
+            List<BoardModel> recontListAll = await _boardRepository.GetBoardRecentListAllMyRepository();
+            return recontListAll;
         }
-
         #endregion
 
 

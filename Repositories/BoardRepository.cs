@@ -864,7 +864,7 @@ namespace BoardCreate.Repositories
             return result;
         }
 
-        public async Task<List<BoardModel>> GetBoardRecentListRepository(List<string> userRecent)
+        public async Task<List<BoardModel>> GetBoardRecentListMyRepository(List<string> userRecent)
         {
             var BoardList = new List<BoardModel>();
             using (var connection = new SqlConnection(_connectionString))
@@ -883,15 +883,14 @@ namespace BoardCreate.Repositories
                     string sectionParam = $"@Section{i}";
                     string boardParam = $"@Board{i}";
 
-                    conditions.Add($"(SectionIDX = {sectionParam} AND IDX = {boardParam})");
+                    conditions.Add($"(SectionIDX = {sectionParam} AND IDX = {boardParam} AND BoardStatus = 0)");
 
                     parameters.Add(new SqlParameter(sectionParam, SectionIDX));
                     parameters.Add(new SqlParameter(boardParam, BoardIDX));
                 }
                 query += string.Join(" OR ", conditions);
-
                 await connection.OpenAsync();
-
+                Console.WriteLine(query);
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
@@ -924,6 +923,52 @@ namespace BoardCreate.Repositories
 
             return BoardList;
         }
+
+        public async Task<List<BoardModel>> GetBoardRecentListAllMyRepository()
+        {
+            var BoardList = new List<BoardModel>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = @"
+                    SELECT * FROM Board.Board WHERE BoardStatus = 0 
+                        ORDER BY IDX DESC 
+                            OFFSET 0 ROWS FETCH NEXT 9 ROWS ONLY;
+                ";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var boardModel = new BoardModel
+                                {
+                                    IDX = reader.GetInt32(reader.GetOrdinal("IDX")),
+                                    SectionIDX = reader.GetInt32(reader.GetOrdinal("SectionIDX")),
+                                    UserID = reader.GetString(reader.GetOrdinal("UserID")),
+                                    Title = reader.GetString(reader.GetOrdinal("Title")),
+                                    BoardPrivate = reader.GetInt32(reader.GetOrdinal("BoardPrivate")),
+                                    ViewCount = reader.GetInt32(reader.GetOrdinal("ViewCount"))
+                                };
+                                BoardList.Add(boardModel);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[ERROR] GetBoardRecentListRepository: {ex.Message}");
+                        throw; 
+                    }
+                }
+            }
+            return BoardList;
+        }
+
 
 
 
