@@ -20,6 +20,7 @@ using System.Collections.Specialized;
 using System.Collections;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Azure;
 
 namespace BoardCreate.Controllers
 {
@@ -193,9 +194,9 @@ namespace BoardCreate.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUserRecentViewLists()
         {
-            var response1 = await _userService.GetBoardRecentListService();
+            var response = await _userService.GetBoardRecentListService();
 
-            return Json(response1);
+            return Json(response);
         }
 
 

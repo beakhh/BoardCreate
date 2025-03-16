@@ -35,12 +35,11 @@
             data: {
             },
             dataType: 'json',
-            success: function (response1) {
+            success: function (response) {
                 let recentList_Every = [];
                 let recentList_My = [];
-                console.log("a : " + response1.isAvailable);
 
-                switch (response1.isAvailable) {
+                switch (response.isAvailable) {
                     case 0:
                         console.log("데이터 없음");
                         break;
