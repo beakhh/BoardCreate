@@ -29,43 +29,40 @@
 </style>
 <script>
     function updateUserRecentViewLists() {
-
         $.ajax({
             url: "/User/UpdateUserRecentViewLists",
             type: 'POST',
             data: {
             },
             dataType: 'json',
-            success: function (response) {
-                success: function (response) {
-                    let recentList_Every = [];
-                    let recentList_My = [];
+            success: function (response1) {
+                let recentList_Every = [];
+                let recentList_My = [];
+                console.log("a : " + response1.isAvailable);
 
-                    switch (response.isAvailable) {
-                        case 0:
-                            console.log("데이터 없음");
-                            break;
-                        case 1:
-                            console.log("전체 리스트만 있음");
-                            recentList_Every = [...response.data_recontList_Every];
-                            break;
-                        case 2:
-                            console.log("내 리스트만 있음");
-                            recentList_My = [...response.data_recontList_My];
-                            break;
-                        case 3:
-                            console.log("둘 다 있음");
-                            recentList_Every = [...response.data_recontList_Every];
-                            recentList_My = [...response.data_recontList_My];
-                            break;
-                    }
-                    let recentList = [...recentList_My, ...recentList_Every]; // 두 리스트를 합침
-
-                    if (recentList.length > 0) {
-                        recentListSet(recentList); // 최종적으로 한 번만 호출
-                    }
+                switch (response1.isAvailable) {
+                    case 0:
+                        console.log("데이터 없음");
+                        break;
+                    case 1:
+                        console.log("전체 리스트만 있음");
+                        recentList_Every = [...response.data_recontList_Every];
+                        break;
+                    case 2:
+                        console.log("내 리스트만 있음");
+                        recentList_My = [...response.data_recontList_My];
+                        break;
+                    case 3:
+                        console.log("둘 다 있음");
+                        recentList_Every = [...response.data_recontList_Every];
+                        recentList_My = [...response.data_recontList_My];
+                        break;
                 }
+                let recentList = [...recentList_My, ...recentList_Every]; // 두 리스트를 합침
 
+                if (recentList.length > 0) {
+                    recentListSet(recentList); // 최종적으로 한 번만 호출
+                }
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
@@ -78,11 +75,11 @@
         let recentList_Every = document.getElementById("recentList_Every")
         let recentList_My = document.getElementById("recentList_My")
 
-        if (recentList_My != null) {
-            for(let i = 0; i <  ){
+        // if (recentList_My != null) {
+        //     for(let i = 0; i <  ){
 
-            }
-        }
+        //     }
+        // }
     }
 
 </script>

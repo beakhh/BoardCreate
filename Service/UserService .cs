@@ -226,18 +226,46 @@ namespace BoardCreate.Service
             return commentsLikesModel;
         }
 
-        public async Task<List<BoardModel>> GetBoardRecentListMyService(List<string> userRecent)
-        {
-            List<BoardModel> recentListMy = await _boardRepository.GetBoardRecentListMyRepository(userRecent);
 
-            return recentListMy;
-        }        
+
+
+        public async Task<BoardRecentListResponse> GetBoardRecentListService()
+        {
+            List<BoardModel>? recontList_Every = await _boardRepository.GetBoardRecentListAllMyRepository();
+            List<BoardModel>? recontList_My = null;
+
+            var userRecent = _cookieService.GetCookie<List<string>>("userRecentBoardDetail") ?? null;
+            if (userRecent != null)
+            {
+                recontList_My = await _boardRepository.GetBoardRecentListMyRepository(userRecent);
+            }
+
+            int isAvailable = 0;
+            if (recontList_Every?.Any() == true) isAvailable += 1;
+            if (recontList_My?.Any() == true) isAvailable += 2;
+
+            return new BoardRecentListResponse
+            {
+                isAvailable = isAvailable,
+                DataRecontListEvery = recontList_Every ?? new List<BoardModel>(),
+                DataRecontListMy = recontList_My
+            };
+        }
+
+
+
 
         public async Task<List<BoardModel>> GetBoardRecentListAllService()
         {
             List<BoardModel> recontListAll = await _boardRepository.GetBoardRecentListAllMyRepository();
             return recontListAll;
         }
+
+        public async Task<List<BoardModel>> GetBoardRecentListMyService(List<string> userRecent)
+        {
+            List<BoardModel> recentListMy = await _boardRepository.GetBoardRecentListMyRepository(userRecent);
+            return recentListMy;
+        }        
         #endregion
 
 
