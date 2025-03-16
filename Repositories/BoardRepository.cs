@@ -869,7 +869,7 @@ namespace BoardCreate.Repositories
             var BoardList = new List<BoardModel>();
             using (var connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT * FROM Board.Board WHERE ";
+                string query = "SELECT IDX, SectionIDX, UserID, Title, BoardPrivate, ViewCount FROM Board.Board WHERE ";
                 List<string> conditions = new List<string>();
                 List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -898,16 +898,23 @@ namespace BoardCreate.Repositories
                     {
                         using (var reader = await command.ExecuteReaderAsync())
                         {
+                            int idxOrdinal = reader.GetOrdinal("IDX");
+                            int sectionIdxOrdinal = reader.GetOrdinal("SectionIDX");
+                            int userIdOrdinal = reader.GetOrdinal("UserID");
+                            int titleOrdinal = reader.GetOrdinal("Title");
+                            int boardPrivateOrdinal = reader.GetOrdinal("BoardPrivate");
+                            int viewCountOrdinal = reader.GetOrdinal("ViewCount");
+
                             while (await reader.ReadAsync())
                             {
                                 var boardModel = new BoardModel
                                 {
-                                    IDX = reader.GetInt32(reader.GetOrdinal("IDX")),
-                                    SectionIDX = reader.GetInt32(reader.GetOrdinal("SectionIDX")),
-                                    UserID = reader.GetString(reader.GetOrdinal("UserID")),
-                                    Title = reader.GetString(reader.GetOrdinal("Title")),
-                                    BoardPrivate = reader.GetInt32(reader.GetOrdinal("BoardPrivate")),
-                                    ViewCount = reader.GetInt32(reader.GetOrdinal("ViewCount"))
+                                    IDX = reader.GetInt32(idxOrdinal),
+                                    SectionIDX = reader.GetInt32(sectionIdxOrdinal),
+                                    UserID = reader.GetString(userIdOrdinal),
+                                    Title = reader.GetString(titleOrdinal),
+                                    BoardPrivate = reader.GetInt32(boardPrivateOrdinal),
+                                    ViewCount = reader.GetInt32(viewCountOrdinal)
                                 };
                                 BoardList.Add(boardModel);
                             }
@@ -933,7 +940,7 @@ namespace BoardCreate.Repositories
                 await connection.OpenAsync();
 
                 string query = @"
-                    SELECT * FROM Board.Board WHERE BoardStatus = 0 
+                    SELECT IDX, SectionIDX, UserID, Title, BoardPrivate, ViewCount  FROM Board.Board WHERE BoardStatus = 0 
                         ORDER BY IDX DESC 
                             OFFSET 0 ROWS FETCH NEXT 9 ROWS ONLY;
                 ";
@@ -944,16 +951,30 @@ namespace BoardCreate.Repositories
                     {
                         using (var reader = await command.ExecuteReaderAsync())
                         {
+                            /*
+                            컬럼 순서가 뒤죽박죽일때 IDX = reader.GetInt32(reader.GetOrdinal("IDX"))
+                            이렇게 변수명으로 부르는거 보다 컬럼명을 변수 int로 지정해서
+                            사용하면 훨씬 효율적임
+                            int인 이유는 값이 어떠한 타입이든 int로 변환되어서 처리된다고 함 그래서 int사용
+                            */
+
+                            int idxOrdinal = reader.GetOrdinal("IDX");
+                            int sectionIdxOrdinal = reader.GetOrdinal("SectionIDX");
+                            int userIdOrdinal = reader.GetOrdinal("UserID");
+                            int titleOrdinal = reader.GetOrdinal("Title");
+                            int boardPrivateOrdinal = reader.GetOrdinal("BoardPrivate");
+                            int viewCountOrdinal = reader.GetOrdinal("ViewCount");
+
                             while (await reader.ReadAsync())
                             {
                                 var boardModel = new BoardModel
                                 {
-                                    IDX = reader.GetInt32(reader.GetOrdinal("IDX")),
-                                    SectionIDX = reader.GetInt32(reader.GetOrdinal("SectionIDX")),
-                                    UserID = reader.GetString(reader.GetOrdinal("UserID")),
-                                    Title = reader.GetString(reader.GetOrdinal("Title")),
-                                    BoardPrivate = reader.GetInt32(reader.GetOrdinal("BoardPrivate")),
-                                    ViewCount = reader.GetInt32(reader.GetOrdinal("ViewCount"))
+                                    IDX = reader.GetInt32(idxOrdinal),
+                                    SectionIDX = reader.GetInt32(sectionIdxOrdinal),
+                                    UserID = reader.GetString(userIdOrdinal),
+                                    Title = reader.GetString(titleOrdinal),
+                                    BoardPrivate = reader.GetInt32(boardPrivateOrdinal),
+                                    ViewCount = reader.GetInt32(viewCountOrdinal)
                                 };
                                 BoardList.Add(boardModel);
                             }
