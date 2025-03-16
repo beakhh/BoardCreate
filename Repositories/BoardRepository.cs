@@ -890,7 +890,6 @@ namespace BoardCreate.Repositories
                 }
                 query += string.Join(" OR ", conditions);
                 await connection.OpenAsync();
-                Console.WriteLine(query);
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
