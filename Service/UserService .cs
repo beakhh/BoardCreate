@@ -232,7 +232,7 @@ namespace BoardCreate.Service
         public async Task<BoardRecentListResponse> GetBoardRecentListService()
         {
             List<BoardModel>? recontList_Every = await _boardRepository.GetBoardRecentListAllMyRepository();
-            List<BoardModel>? recontList_My = null;
+            List<BoardModel>? recontList_My = new();
 
             var userRecent = _cookieService.GetCookie<List<string>>("userRecentBoardDetail") ?? null;
             if (userRecent != null)
@@ -247,7 +247,7 @@ namespace BoardCreate.Service
             return new BoardRecentListResponse
             {
                 isAvailable = isAvailable,
-                DataRecontListEvery = recontList_Every ?? new List<BoardModel>(),
+                DataRecontListEvery = recontList_Every ,
                 DataRecontListMy = recontList_My
             };
         }

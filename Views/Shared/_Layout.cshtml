@@ -45,16 +45,16 @@
                         break;
                     case 1:
                         console.log("전체 리스트만 있음");
-                        recentList_Every = [...response.data_recontList_Every];
+                        recentList_Every = [...response.DataRecontListEvery];
                         break;
                     case 2:
                         console.log("내 리스트만 있음");
-                        recentList_My = [...response.data_recontList_My];
+                        recentList_My = [...response.DataRecontListMy];
                         break;
                     case 3:
                         console.log("둘 다 있음");
-                        recentList_Every = [...response.data_recontList_Every];
-                        recentList_My = [...response.data_recontList_My];
+                        recentList_Every = [...response.DataRecontListEvery];
+                        recentList_My = [...response.DataRecontListMy];
                         break;
                 }
                 let recentList = [...recentList_My, ...recentList_Every]; // 두 리스트를 합침
@@ -73,6 +73,8 @@
     function recentListSet(recentList) {
         let recentList_Every = document.getElementById("recentList_Every")
         let recentList_My = document.getElementById("recentList_My")
+
+        console.log("recentList : " + recentList);
 
         // if (recentList_My != null) {
         //     for(let i = 0; i <  ){

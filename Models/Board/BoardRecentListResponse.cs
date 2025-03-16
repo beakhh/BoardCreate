@@ -7,6 +7,6 @@ namespace BoardCreate.Models.Board
     {
         public int isAvailable { get; set; }
         public List<BoardModel> DataRecontListEvery { get; set; } = new();
-        public List<BoardModel>? DataRecontListMy { get; set; }
+        public List<BoardModel> DataRecontListMy { get; set; } = new();
     }
 }
