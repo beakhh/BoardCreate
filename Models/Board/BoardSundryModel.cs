@@ -7,7 +7,7 @@ namespace BoardCreate.Models.Board
     {
         public int SectionIDX { get; set; }
         public string SelectedTab { get; set; } = "전체";
-        public int PageSize { get; set; } = 5;
+        public int PageSize { get; set; } = 10;
         public int CurrentPage { get; set; } = 1;
         public int PageTotalCount { get; set; } = 1;
         public string UserID { get; set; }
