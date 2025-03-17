@@ -41,28 +41,22 @@
                 let recentListCase;
                 switch (response.isAvailable) {
                     case 0:
-                        console.log("데이터 없음");
                         recentListCase = 0;
                         break;
                     case 1:
-                        console.log("전체 리스트만 있음");
                         recentList_Every = [...response.DataRecontListEvery];
                         recentListCase = 1;
                         break;
                     case 2:
-                        console.log("내 리스트만 있음");
                         recentList_My = [...response.DataRecontListMy];
                         recentListCase = 2;
                         break;
                     case 3:
-                        console.log("둘 다 있음");
                         recentList_Every = [...response.DataRecontListEvery];
                         recentList_My = [...response.DataRecontListMy];
                         recentListCase = 3;
                         break;
                 }
-                //let recentList = [...recentList_My, ...recentList_Every]; // 두 리스트를 합침
-
                 let recentList = { my: recentList_My, every: recentList_Every };
                 let totalLength = recentList.my.length + recentList.every.length;
 
@@ -78,10 +72,6 @@
     }
     // 9개가 넘으면 스크롤
     function recentListSet(recentList, recentListCase) {
-        console.log(recentList.my);
-        console.log(recentList.every);
-        console.log(recentListCase);
-
         if (recentListCase == 1) {
             let recentBox_Name = "recentListBox_Every"
             recentListEveryDynamite(recentBox_Name, recentList.every)
@@ -135,8 +125,6 @@
                 <input type="hidden" id="${recentBox_Name}_${[i]}_ViewCount" value="${recentListData[i].ViewCount}"/>
             `;
             recentBox1.appendChild(newRecentDiv);
-
-            // onclick="BoardDetail index에 이거 히든으로 넣고 호출하는게 더 보안상 괜찮음 나중에 바꿔야함
         }
     }
 

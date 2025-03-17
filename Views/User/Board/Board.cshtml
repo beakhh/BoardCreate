@@ -92,6 +92,32 @@
     .tabsName:hover {
         background-color: #c680d98a;
     }
+
+    select {
+        -webkit-appearance: none;
+        border: 1px solid #bc48ff;
+        border-radius: 8px;
+        font-size: 11px;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+        select:hover {
+            border-color: #0056b3;
+            background-color: #e9ecef;
+        }
+
+        select:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 5px rgba(0, 91, 187, 0.5);
+        }
+
+        select:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
 </style>
 <head>
     <meta charset="UTF-8">
@@ -190,7 +216,17 @@
                             </div>
                         </li>
                     </ul>
-
+                    <div>
+                        @{
+                            var pageSizes = new List<int> { 5, 10, 20 };
+                        }
+                        <select id="pageSizeSelect" style="margin: -8px 0 11px 5px; height: 34px;" onchange="changePageSize()">
+                            @foreach (var size in pageSizes)
+                            {
+                                <option value="@size" selected="@(Model.BoardSundry.PageSize == size ? "selected" : null)">@size</option>
+                            }
+                        </select>
+                    </div>
                 </div>
 
 
@@ -202,20 +238,14 @@
                 </form>
             </div>
         </div>
+        <div>
 
+        </div>
         <div class="right_container">
             <a asp-controller="User" asp-action="BoardInsert" asp-route-SectionIDX="@Model.SectionIDX">
                 글쓰기 @Model.SectionIDX
             </a>
-            @{
-                var pageSizes = new List<int> { 5, 10, 20 };
-            }
-            <select id="pageSizeSelect" onchange="changePageSize()">
-                @foreach (var size in pageSizes)
-                {
-                    <option value="@size" selected="@(Model.BoardSundry.PageSize == size ? "selected" : null)">@size 개씩</option>
-                }
-            </select>
+            
 
 
         </div>
