@@ -120,12 +120,15 @@
             const newRecentDiv = document.createElement('div');
             newRecentDiv.id = `${recentBox_Name}_${[i]}`;
             newRecentDiv.className = `recentList`;
+            newRecentDiv.onclick = function () {
+                recentBoardDetailGo(`${recentBox_Name}_${[i]}`);
+            };
             newRecentDiv.innerHTML = `
                 ${imgDiv}
                 <div >
                     ${recentListData[i].Title}
                 </div>
-                <input type="hidden" id="${recentBox_Name}_${[i]}IDX" value="${recentListData[i].IDX}"/>
+                <input type="hidden" id="${recentBox_Name}_${[i]}_IDX" value="${recentListData[i].IDX}"/>
                 <input type="hidden" id="${recentBox_Name}_${[i]}_SectionIDX" value="${recentListData[i].SectionIDX}"/>
                 <input type="hidden" id="${recentBox_Name}_${[i]}_UserID" value="${recentListData[i].UserID}"/>
                 <input type="hidden" id="${recentBox_Name}_${[i]}_BoardPrivate" value="${recentListData[i].BoardPrivate}"/>
@@ -137,6 +140,13 @@
         }
     }
 
+    function recentBoardDetailGo(recentBox_Name) {
+        let BoardIDX = document.getElementById(`${recentBox_Name}_IDX`).value;
+        let SectionIDX = document.getElementById(`${recentBox_Name}_SectionIDX`).value;
+        let ViewCount = document.getElementById(`${recentBox_Name}_ViewCount`).value;
+
+        window.location.href = `User/BoardDetail?BoardIDX=${BoardIDX}&SectionIDX=${SectionIDX}&ViewCount=${ViewCount}`;
+    }
 
 </script>
 <body>
