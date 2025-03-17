@@ -16,7 +16,6 @@
         width: 80%;
         min-height: 900px;
         max-height:100%;
-        border: 1px solid lightcoral;
     }
 
     .right_container {
@@ -25,14 +24,17 @@
         margin: 0 0 0 26px;
     }
     .qq{
-        border: none;
-        border: 1px solid black;
+        border: 0.1px solid #ced4da;
+        border-radius: 9px;
+        padding: 3px;
+        margin: 3px 0 0 0;
     }
 
     #BoardLike {
         height: 50px;
         display: flex;
         justify-content: center;
+        margin: 10px 0 10px 0;
     }
 
     .BoardLikes{
@@ -43,7 +45,7 @@
         justify-content: center;
         border: 2px solid #abcdff8a; /* 테두리를 솔리드로 설정 */
         border-radius: 15px; /* 꼭짓점을 둥글게 설정 */
-        /*background-color: #d6e7ff8a;  기본값*/
+            /*background-color: #d6e7ff8a;  기본값*/
         /*background-color: #d6e7ff8a;*/
         padding: 10px; /* 안쪽 여백 */
         text-align: center; /* 텍스트 가운데 정렬 */
@@ -314,7 +316,7 @@
             <div class="qq" id="renderedContent" style="min-height: 500px; padding: 10px;">
                 @Html.Raw(Model.Board.Contents)
             </div>
-            <div class="" id="BoardLike" style="margin-bottom:10px;">
+            <div class="" id="BoardLike" >
                 @{
                     var recommendStyle = Model.UserPreferences.LikeStatus == 0 ? "background-color: #d6e7ff8a; margin-right:5px;" : "margin-right:5px;";
                     var notRecommendStyle = Model.UserPreferences.LikeStatus == 1 ? "background-color: #d6e7ff8a; margin-left:5px;" : "margin-left:5px;";
