@@ -18,7 +18,7 @@
     .right_container {
         width: 20%;
         height: 900px;
-        border: 1px solid #198754;
+        margin: 0 0 0 26px;
     }
 
     .Home_Login {
@@ -118,6 +118,43 @@
             cursor: not-allowed;
         }
 
+    #recentBox1 {
+        width: 100%;
+        height: 500px;
+        margin: 14px 0 0 0;
+        border: 0.1px solid #ced4da;
+        border-radius: 28px;
+    }
+
+    .recentBox {
+        width: 100%;
+        height: 49%;
+        border: 0.1px solid #ced4da;
+        padding: 10px;
+        margin: 1% 0 1% 0;
+    }
+
+    #recontBoxTitle {
+        font-size: 13px;
+        margin: 0 0 7px 0;
+    }
+
+    .recentList {
+        width: 100%;
+        height: 21px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .recentList {
+        transition: background-color 0.3s ease;
+    }
+
+    .recentList:hover {
+        background-color: rgba(128, 128, 128, 0.15) !important;
+    }
 </style>
 <head>
     <meta charset="UTF-8">
@@ -229,8 +266,6 @@
                     </div>
                 </div>
 
-
-
                 <form id="hiddenForm" method="get" action="/User/BoardDetail" style="display:none;" >
                     <input type="hidden" name="BoardIDX" id="hiddenBoardIDX" />
                     <input type="hidden" name="SectionIDX" id="hiddenSectionIDX" />
@@ -238,20 +273,71 @@
                 </form>
             </div>
         </div>
-        <div>
-
-        </div>
         <div class="right_container">
-            <a asp-controller="User" asp-action="BoardInsert" asp-route-SectionIDX="@Model.SectionIDX">
-                글쓰기 @Model.SectionIDX
-            </a>
-            
+            <div>
+                @*@if (@HttpContextAccessor.HttpContext.Session.GetString("NickName") == null)*@
+                @if (ViewBag.NickName == null)
+                {
+                    <form action="/User/Login" method="post" class="p-4 border rounded shadow-sm">
+                        <div class="mb-2 d-flex align-items-center ">
+                            <input type="text" id="UserId" name="UserId" class="form-control Home_Login me-2" style="font-size: 13px;" placeholder="아이디" required>
+                            <input type="checkbox" name="idSave" checked /><span style="font-size:10px; text-align:center; margin-left:3px;">아이디<br>저장</span>
+                        </div>
+                        <div class="mb-2 d-flex ">
+                            <input type="password" id="UserPW" name="UserPW" placeholder="비밀번호" style="font-size: 13px;" class="form-control Home_Login me-2" required>
+                            <button type="submit" class="btn btn-outline-primary btn-sm" style="font-size: 13px;">Login</button>
+                        </div>
+                        <div class="text-center">
+                            <a asp-controller="User" asp-action="Register" style="font-size:10px;">회원가입</a>
+                            <a href="/User/Register" style="font-size:10px;">아이디/비밀번호 찾기</a>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <div id="rigth_1">
+                        <div style="width: 50%;">
+                            @ViewBag.Member.NickName 님
+                        </div>
+                        <div style="width: 50%;">
+                            등급 @ViewBag.Member.UserLevel
+                        </div>
+                    </div>
+                    <div id="rigth_1">
+                        <div style="width: 100%;">
+                            <a asp-controller="User" asp-action="Logout" style="font-size:10px;">로그아웃하기</a>
+                        </div>
+                    </div>
+                    <a asp-controller="User" asp-action="BoardInsert" asp-route-SectionIDX="@Model.SectionIDX">
+                                    글쓰기 @Model.SectionIDX
+                    </a>
+                }
+            </div>
 
+            <div id="recentBox1">
+                <div class="recentBox">
+                    <div id="recontBoxTitle">
+                        최신글
+                    </div>
+                    <div id="recentListBox_Every">
+                    </div>
+                </div>
 
+                <div class="recentBox">
+                    <div id="recontBoxTitle">
+                        내가 본 최신글
+                    </div>
+                    <div id="recentListBox_My">
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
+
     <script>
-        console.log(@Model.SectionIDX);
+        updateUserRecentViewLists();
+
         function formatTimeDifference(pastTime) {
             const now = new Date();
             let formattedPastTime = pastTime.replace("오전 ", "").replace("오후 ", "");
