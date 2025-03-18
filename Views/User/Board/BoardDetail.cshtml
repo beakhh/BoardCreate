@@ -363,8 +363,11 @@
                     <div class="spinner-border text-primary" id="loadingOverlay" role="status" style="display:none">
                         <span class="visually-hidden">Loading...</span>
                     </div>
+                    <div id="loadMoreComments" style="display:none" onclick="CommentsReplyDynamicSelect(0)">
+                        댓글 더 보기
+                    </div>
                 </div>
-
+                
             </div>
         </div>
         <div class="right_container">
@@ -675,12 +678,22 @@
     }
 
     let scrollTrigger = 0;
+    let loadMoreCommentsCheck = 0;
+
     window.addEventListener('scroll', function () {
         let scrollPosition = window.scrollY + window.innerHeight; // 현재 스크롤 위치
         let pageHeight = document.documentElement.scrollHeight;  // 전체 페이지 높이
         const overlay = document.getElementById("loadingOverlay");
+        const loadMoreComments = document.getElementById("loadMoreComments");
 
-        if (scrollTrigger == 0) {
+        let currentCommentsValue = document.getElementById("currentComments").value;
+        let currentCommentsPlusValue = document.getElementById("currentCommentsPlus").value;
+
+        if (+currentCommentsValue != +currentCommentsPlusValue && currentCommentsValue != 0) {
+            loadMoreComments.style.display = "flex";
+            loadMoreCommentsCheck = 1;
+        }
+        else if (scrollTrigger == 0) {
 
             if (scrollPosition >= Math.ceil(pageHeight - 1)) {
                 scrollTrigger = 1;
@@ -694,6 +707,7 @@
                 return false;
             }
         }
+
     });
     
     function CommentsReplyDynamicSelect(targetedCommentsIDX) {
@@ -708,13 +722,15 @@
         let currentCommentsValue;
         let currentCommentsPlus;
 
+       
+
         if(targetedCommentsIDX == 0){
             currentComments = document.getElementById("currentComments");
-            currentCommentsPlus = document.getElementById("currentCommentsPlus").value
+            currentCommentsPlus = document.getElementById("currentCommentsPlus").value;
         }
         else{
             currentComments = document.getElementById(`currentReply_${targetedCommentsIDX}`);
-            currentCommentsPlus = document.getElementById("currentReplyPlus").value
+            currentCommentsPlus = document.getElementById("currentReplyPlus").value;
             currentCommentsValue = currentComments.value;
 
             const ReplyDad = document.getElementById(`replyDad_${targetedCommentsIDX}`);
@@ -724,7 +740,7 @@
                 seeMore1ID.outerHTML = `<div id="seeMore1_${targetedCommentsIDX}" class="seeMore_1" onclick="SeeMoreClose(${targetedCommentsIDX})">답글 닫기</div>`;
             }
         }
-
+        
         $.ajax({
             url: "/User/CommentsReplyDynamicSelect",
             type: "POST",
@@ -745,8 +761,15 @@
                         console.log(commentsData[3]);
                         DynamicCommentsView(commentsData);
 
-                        const overlay = document.getElementById("loadingOverlay");
-                        overlay.style.display = "none";
+                        if (loadMoreCommentsCheck == 0) {
+                            const overlay = document.getElementById("loadingOverlay");
+                            overlay.style.display = "none";
+                        }
+                        else{
+                            const loadMoreComments = document.getElementById("loadMoreComments");
+                            loadMoreComments.style.display = "flex";
+                        }
+
                     }
                     else{
                         console.log(commentsData[0]);
@@ -763,7 +786,7 @@
                     else currentCommentsSum = +currentCommentsValue + +DynamicPlusValue;
 
                     currentComments.value = currentCommentsSum;
-                    
+
                     return false;
                 }
                 else {
