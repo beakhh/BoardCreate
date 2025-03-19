@@ -128,6 +128,7 @@
         width: 85%;
         height: 100%;
         align-items: flex-start;
+        padding: 2px;
     }
 
     .Daughter1{
@@ -143,9 +144,11 @@
     }
 
     .Daughter2 {
-        background-color: #c4afef4a;
         flex: 0.89;
         margin: 0 0.5% 0 2%;
+        border: 0.1px solid #ced4da;
+        border-radius: 18px;
+        padding: 2px;
     }
 
     .commentsLikeMom{
@@ -284,9 +287,9 @@
         transition: background-color 0.3s ease;
     }
 
-        .recentList:hover {
-            background-color: rgba(128, 128, 128, 0.15) !important;
-        }
+    .recentList:hover {
+        background-color: rgba(128, 128, 128, 0.15) !important;
+    }
 </style>
 <head>
     <meta charset="UTF-8">
@@ -560,7 +563,7 @@
         newDiv1.innerHTML = `
                 <div class="Daughter1">사진</div>
                 <div class="Daughter2">
-                    <div style="display:flex; font-size: 12px;">
+                    <div style="display:flex; font-size: 12px; margin: 0px 0px 0 11px;">
                         <div>
                              ${writerIDX}
                         </div>
@@ -568,7 +571,7 @@
                             <span id="timeShow_${commentsIDX}" class="time-text" data-time=""></span>
                         </div>
                     </div>
-                    <div>${commentsContent}</div>
+                    <div style="margin: 3px 0 0 6px;">${commentsContent}</div>
                 </div>
                 <div class="Daughter3" style="flex: 0.01;">3</div>
             `;
@@ -876,8 +879,8 @@
             newDiv1.id = `commentsDaughter${commentsData[i].IDX}`;
             newDiv1.innerHTML = `
                 <div class="Daughter1">사진</div>
-                <div class="Daughter2"> 
-                    <div style="display:flex; font-size: 12px;">
+                <div class="Daughter2">
+                    <div style="display:flex; font-size: 12px; margin: 0px 0px 0 11px;">
                         <div>
                             ${commentsData[i].WriterID}
                         </div>
@@ -885,7 +888,7 @@
                             <span id="timeShow_${commentsData[i].IDX}" class="time-text" data-time="${commentsData[i].CommentsUpdatedAt}"></span>
                         </div>
                     </div>
-                    <div>${commentsData[i].CommentsContent}</div>
+                    <div style="margin: 3px 0 0 6px;">${commentsData[i].CommentsContent}</div>
                 </div>
                 <div class="Daughter3" style="flex: 0.01;">3</div>
             `;
