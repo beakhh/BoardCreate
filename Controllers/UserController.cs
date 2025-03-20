@@ -345,7 +345,7 @@ namespace BoardCreate.Controllers
             var userId = HttpContext.Session.GetObject<string>("UserID");
 
             UserSessionModel userSession = null;
-            string session_UserID = null;
+            string session_UserID = "Guest"; 
 
             if (!string.IsNullOrEmpty(userId))
             {
