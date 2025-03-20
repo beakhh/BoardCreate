@@ -345,10 +345,13 @@ namespace BoardCreate.Controllers
             var userId = HttpContext.Session.GetObject<string>("UserID");
 
             UserSessionModel userSession = null;
+            string session_UserID = null;
+
             if (!string.IsNullOrEmpty(userId))
             {
                 userSession = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
                 boardSundryModel.UserID = userId;
+                session_UserID = userSession.UserID;
             }
 
             var firstKey = _cookieService.GetCookieDictionary("userRecentVisit", 1)?.ToString();
@@ -372,7 +375,7 @@ namespace BoardCreate.Controllers
             }
 
             int UserLevel = userSession?.UserLevel ?? 8;
-
+             
             var TabsAllList = await _userService.GetSectionTabsListService(boardSundryModel.SectionIDX, UserLevel);
             var BoardTabs = new List<SectionTabsModel>();
             BoardTabs.AddRange(TabsAllList);
@@ -381,9 +384,10 @@ namespace BoardCreate.Controllers
             if (!validTabNames.Contains(boardSundryModel.SelectedTab)) boardSundryModel.SelectedTab = "전체";
 
             BoardViewModel ModelCollect = await _userService.GetBoardListService(UserLevel, boardSundryModel);
-            ModelCollect.BoardTabs = BoardTabs;
-            ModelCollect.SectionIDX = boardSundryModel.SectionIDX;
 
+            ModelCollect.BoardTabs = BoardTabs;
+
+            ModelCollect.UserID = session_UserID;
 
 
             return View("Board/Board", ModelCollect);
