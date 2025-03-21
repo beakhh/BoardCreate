@@ -206,9 +206,25 @@
                 <input type="hidden" name="NickName" id="" value="@Model.SessionNickName" />
             </form>
         </div>
-
         <div class="right_container">
-            
+            <div id="recentBox1">
+                <div class="recentBox">
+                    <div id="recontBoxTitle">
+                        최신글
+                    </div>
+                    <div id="recentListBox_Every">
+                    </div>
+                </div>
+
+                <div class="recentBox">
+                    <div id="recontBoxTitle">
+                        내가 본 최신글
+                    </div>
+                    <div id="recentListBox_My">
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
     <script>
@@ -268,7 +284,7 @@
                 { name: 'insert', items: ['Image', 'Table'] }
             ]
         });
-
+        updateUserRecentViewLists();
     </script>
 </body>
 
