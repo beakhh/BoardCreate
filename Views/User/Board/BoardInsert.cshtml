@@ -6,8 +6,8 @@
 <style>
     .container2 {
         display: flex;
-        width: 1200px;
-        height: 900px;
+        width: 1079px;
+        height: 100%;
     }
 
     .left_container {
@@ -26,7 +26,6 @@
         width: 130px;
         height: 30px
     }
-
     #top {
         display: flex;
         align-items: center; /* 세로 정렬 */
@@ -34,7 +33,6 @@
         height: 77px;
         width: 100%;
     }
-
     #plus_button {
         margin-left: auto; /* 오른쪽 끝으로 밀어내기 */
     }
@@ -94,6 +92,34 @@
     .cke_contents {
         height: 600px !important; /* CKEditor 내용 영역의 높이 설정 */
     }
+
+    #inputBox_1{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        height: 56px;
+        padding: 8px;
+    }
+    
+    #current_boardTabs{
+        width: 10%;
+    }
+    #inputTitle{
+        width: 70%;
+    }
+
+    #selectBoardPrivate{
+        width: 10%;
+    }
+
+    #inputBox_2 {
+        border: 1px solid lightcoral;
+        width: 100%;
+        margin-left: 0;
+        height: 100%;
+        padding:2px;
+    }
 </style>
 <head>
     <meta charset="UTF-8">
@@ -103,55 +129,52 @@
 </head>
 
 <body>          
-
-    <div id="top">
-        @Model.BoardSections.SectionName
+     <div id="top">
+         <div id="">
+            @Model.BoardSections.SectionName
+         </div>
     </div>
 
     <div class="container2">
         <div class="left_container">
             <form id="myForm" asp-action="BoardInsert" asp-controller="User" method="post">
-                <div class="table">
-                    <div class="row" id="rowNumber1">
-                        <div id="rowNumber1-1">
-                            <select id="tab" name="Tab" class="form-control">
-                                @foreach (var item in Model.BoardTabs)
-                                {
-                                    <option value="@item.TabName">@item.TabName</option>
-                                }
-                            </select>
-                        </div>
-                        <div id="rowNumber1-2">
-                            <input type="text" id="title" name="Title" class="form-control" placeholder="제목을 입력하세요" required />
-                        </div>
-                    </div>
-                    <div class="row" id="rowNumber3">
-                        <textarea name="Contents" id="content"></textarea>
-                    </div>
-                    <div class="row" id="rowNumber4">
-                        <div>
-                            @if(Model.SessionLevel < 4){
-                                <select id="boardPrivate" name="BoardPrivate">
-                                    <option value="4" selected>일반글</option>
-                                    <option value="1">공지사항</option>
-                                    <option value="2">이벤트</option>
-                                    <option value="0">관리자 공지</option>
-                                </select>
-                            }
-                            else
+                <div id="inputBox_1">
+                    <div id="current_boardTabs">
+                        <select id="tab" name="Tab" class="form-control">
+                            @foreach (var item in Model.BoardTabs)
                             {
-                                <input type="hidden" id="boardPrivate" name="BoardPrivate" value="4" />
+                                <option value="@item.TabName">@item.TabName</option>
                             }
-                            <button type="button" class="btn btn-outline-primary" onclick="InsertBoard()">등록하기</button>&nbsp;
-                            <button type="button" class="btn btn-outline-primary" onclick="">돌아가기</button>
-                        </div>
+                        </select>
                     </div>
-                    <input type="hidden" name="SectionIDX" id="sectionIDX" value="@Model.BoardSections.IDX" />
-                    <input type="hidden" name="UserID" id="" value="@Model.SessionUserID" />
-                    <input type="hidden" name="NickName" id="" value="@Model.SessionNickName" />
+                    <div id="inputTitle">
+                        <input type="text" id="title" name="Title" class="form-control" placeholder="제목을 입력하세요" required />
+                    </div>
+                    <div id="selectBoardPrivate">
+                        @if (Model.SessionLevel < 4)
+                        {
+                            <select id="boardPrivate" name="BoardPrivate" class="form-control">
+                                <option value="4" selected>일반글</option>
+                                <option value="1">공지사항</option>
+                                <option value="2">이벤트</option>
+                                <option value="0">관리자 공지</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <input type="hidden" id="boardPrivate" name="BoardPrivate" value="4" />
+                        }
+                    </div>
                 </div>
+                <div id="inputBox_2">
+                    <textarea name="Contents" id="content"></textarea>
+                </div>
+                <input type="hidden" name="SectionIDX" id="sectionIDX" value="@Model.BoardSections.IDX" />
+                <input type="hidden" name="UserID" id="" value="@Model.SessionUserID" />
+                <input type="hidden" name="NickName" id="" value="@Model.SessionNickName" />
             </form>
-
+            <button type="button" class="btn btn-outline-primary" onclick="InsertBoard()">등록하기</button>&nbsp;
+            <button type="button" class="btn btn-outline-primary" onclick="">돌아가기</button>
         </div>
 
         <div class="right_container">
