@@ -120,6 +120,30 @@
         height: 100%;
         padding:2px;
     }
+    #inputBox_3{
+        display: flex;
+        justify-content: flex-end;
+        margin: 10px 0 0 0;
+    }
+    .clickBox {
+        height: 36px;
+        width: 81px;
+        font-size: 14px;
+        padding: 3px;
+        margin: 0 9px 0 0;
+        background-color: white;
+    }
+    #a{
+        border: 2px solid #c680d98a;
+        border-radius: 12px;
+    }
+    #b{
+        border: 2px solid #82a8df;
+        border-radius: 12px;
+    }
+    .clickBox:hover {
+        background-color: #c680d98a;
+    }
 </style>
 <head>
     <meta charset="UTF-8">
@@ -169,12 +193,14 @@
                 <div id="inputBox_2">
                     <textarea name="Contents" id="content"></textarea>
                 </div>
+                <div id="inputBox_3">
+                    <button  type="button" id="a" class="clickBox" onclick="InsertBoard()">등록하기</button>&nbsp;
+                    <button type="button" id="b" class="clickBox" onclick="">돌아가기</button>
+                </div>
                 <input type="hidden" name="SectionIDX" id="sectionIDX" value="@Model.BoardSections.IDX" />
                 <input type="hidden" name="UserID" id="" value="@Model.SessionUserID" />
                 <input type="hidden" name="NickName" id="" value="@Model.SessionNickName" />
             </form>
-            <button type="button" class="btn btn-outline-primary" onclick="InsertBoard()">등록하기</button>&nbsp;
-            <button type="button" class="btn btn-outline-primary" onclick="">돌아가기</button>
         </div>
 
         <div class="right_container">
