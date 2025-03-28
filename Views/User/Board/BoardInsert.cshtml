@@ -239,21 +239,17 @@
             let Content = CKEDITOR.instances.content.getData();
 
             let TabIdx = document.getElementById("tab").value;
-            console.log("Asdf"); // 선택된 값 출력
             let BoardPrivate = document.getElementById("boardPrivate").value;
-            console.log(BoardPrivate); // 선택된 값 출력
             let SectionIDX = document.getElementById("sectionIDX").value;
 
             if (!regTitle1.test(Title)) {
                 alert("제목을 입력하시오");
                 document.getElementById("title").focus();
-                console.log("1");
                 return false;
             }
             else if (!regTitle3.test(Title)) {
                 alert("제목은 25글자보다 적어야 합니다.");
                 document.getElementById("title").focus();
-                console.log("5");
                 return false;
             }
             else if (!regContents1.test(Content)) {
@@ -285,6 +281,17 @@
             ]
         });
         updateUserRecentViewLists();
+
+        document.getElementById("myForm").addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                // 입력 요소가 textarea가 아닌 경우만 막음
+                if (event.target.tagName !== "TEXTAREA") {
+                    event.preventDefault(); // 엔터 눌러도 폼 제출 안 되게 막음
+                }
+            }
+        });
+
+
     </script>
 </body>
 
