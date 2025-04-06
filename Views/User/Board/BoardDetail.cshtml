@@ -256,7 +256,25 @@
         border-radius: 28px;
     }
 
-    
+    #viewCount_Div{
+        display: flex;
+        justify-content: space-between;
+        padding: 4px;
+    }
+
+    #BoardInsert_Edit{
+        margin: 0 16px 0px 0px;
+        border: 0.1px solid #82a8df;
+        border-radius: 12px;
+        padding: 0px;
+        width: 8.5%;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    #BoardInsert_Edit:hover{
+            background-color: #82a8df91;
+    }
 </style>
 <head>
     <meta charset="UTF-8">
@@ -280,8 +298,15 @@
                 <div style="margin-right: 8px;">제목 :</div>
                 <div>@Model.Board.Title</div>
             </div> 
-            <div class="qq">
-               조회수 :  @Model.Board.ViewCount
+            <div class="qq" id="viewCount_Div">
+                <div >
+                    조회수 :  @Model.Board.ViewCount
+                </div>
+                @if(Model.Board.UserID == Model.UserSession.UserID){
+                    <div id="BoardInsert_Edit">
+                        수정하기
+                    </div>
+                }
             </div>
             <div class="qq" id="renderedContent" style="min-height: 500px; padding: 10px;">
                 @Html.Raw(Model.Board.Contents)

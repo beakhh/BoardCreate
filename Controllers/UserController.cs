@@ -505,7 +505,7 @@ namespace BoardCreate.Controllers
                 // Value가 List<int>인지 확인
                 if (!string.IsNullOrEmpty(value))
                 {
-                    bool valueCheck = value.Contains(BoardIDX.ToString());
+                    bool valueCheck = value?.Contains(BoardIDX.ToString());
                     if (valueCheck) viewCountCheck = 1;
                 }
             }
@@ -517,15 +517,25 @@ namespace BoardCreate.Controllers
             if (ViewCount >20 || userId == null) viewCountCheck = 1;
 
             BoardDetailModel boardDetailModel = new BoardDetailModel();
+
             UserSessionModel userSessionModel = new UserSessionModel();
 
+            /*
             if (userId != null)
             {
                 userSessionModel = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
             }
-            
-
+            */
             boardDetailModel = await _userService.GetBoardDetailService(BoardIDX, viewCountCheck, userId);
+
+            if (userId != null)
+            {
+                boardDetailModel.UserSession = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
+            }
+            else
+            {
+                boardDetailModel.UserSession = userSessionModel;
+            }
 
             //if(boardDetailModel == null) return _messageService.SendMessage("GetboardDetailModelFalse");
 
@@ -535,7 +545,6 @@ namespace BoardCreate.Controllers
                 return RedirectToAction("Board", new { SectionIDX }); // 탭 이름까지 나중에 ㄱㄱ
             }
 
-            if (userId != null) boardDetailModel.UserSession = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
 
             return View("Board/BoardDetail", boardDetailModel);
         }
