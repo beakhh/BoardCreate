@@ -64,6 +64,7 @@ namespace BoardCreate.Controllers
             BoardTabs.AddRange(SectionLists.Where(section => section.SectionStatus == 2));
             */
 
+            // 이 부분 2개로 나누지 말고 ajax를 사용해서 중지버튼을 누르면 검색하는거로 지금 2개의 검색코드가 굉장히 비 효율적임 고쳐야함
             var SectionLists = new ViewModelLists
             {
                 SectionListsStatusValid = sectionListsStatusValid,

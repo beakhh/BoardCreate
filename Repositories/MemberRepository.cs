@@ -113,8 +113,10 @@ namespace BoardCreate.Repositories
 
             return count == 0;
         }
+        /*
         public async Task<MemberModel> GetUserByIdData(string UserValue, int type)
         {
+
             MemberModel? user = null;
             if (type == 0)
             {
@@ -128,7 +130,7 @@ namespace BoardCreate.Repositories
 
             return user;
         }
-
+        */
         public async Task<bool> UserPreferencesDuplicateCehck(string userId, int boardIdx)
         {
             bool exists = false;

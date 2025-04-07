@@ -149,46 +149,15 @@ namespace BoardCreate.Controllers
 
             var SectionLists = new ViewModelLists
             {
-                SectionListsStatusValid = sectionListsStatusValid
+                SectionListsStatusValid = sectionListsStatusValid,
+                UserSession = new UserSessionModel()
             };
 
             var userId = HttpContext.Session.GetObject<string>("UserID");
-            UserSessionModel userSession = null;
-            if (!string.IsNullOrEmpty(userId))
-            {
-                userSession = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
-            }
 
-            // string? SessionNickName = HttpContext.Session.GetString("NickName");
+            if (!string.IsNullOrEmpty(userId))  SectionLists.UserSession = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
 
-
-
-            string SessionNickName = userSession?.NickName ?? "no";
-
-            if (SessionNickName == "no")
-            {
-                ViewBag.NickName = userSession?.NickName ?? "NoData";
-                return View(SectionLists);
-            }
-            else
-            {
-                int type = 1;
-                var MemberModel = await _memberRepository.GetUserByIdData(SessionNickName, type);
-
-                ViewBag.NickName = userSession?.NickName ?? "NoData";
-
-                if (MemberModel == null)
-                {
-                    HttpContext.Session.Remove("UserSession");
-                    return _messageService.SendMessage("LoginError");
-                }
-
-                //이부분 나중에 레벨로 해야함
-                if (MemberModel.UserId.Equals("admin")) HttpContext.Session.SetString("admin", "admin");
-                ViewBag.Member = MemberModel;
-
-                return View(SectionLists);
-            }
+            return View(SectionLists);
         }
 
         [HttpPost]

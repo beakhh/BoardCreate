@@ -138,8 +138,9 @@
         </div>
         <div class="right_container">
             <div>
-                @*@if (@HttpContextAccessor.HttpContext.Session.GetString("NickName") == null)*@
-                @if (ViewBag.NickName == "NoData")
+                @*@if (@HttpContextAccessor.HttpContext.Session.GetString("NickName") == null)
+                @if (ViewBag.NickName == "NoData")*@
+                @if (Model.UserSession.UserID == "guest")
                 {
                     <form action="/User/Login" method="post" class="p-4 border rounded shadow-sm">
                         <div class="mb-2 d-flex align-items-center ">
@@ -160,10 +161,10 @@
                 {
                     <div id="rigth_1">
                         <div style="width: 50%;">
-                            @ViewBag.Member.NickName 님
+                            @Model.UserSession.NickName
                         </div>
                         <div style="width: 50%;">
-                            등급 @ViewBag.Member.UserLevel
+                            @Model.UserSession.UserLevel
                         </div>
                     </div>
                     <div id="rigth_1">
