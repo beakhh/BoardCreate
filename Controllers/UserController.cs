@@ -263,7 +263,6 @@ namespace BoardCreate.Controllers
 
             //HttpContext.Session.SetString("NickName", user.NickName);
 
-
             var userSession = new UserSessionModel
             {
                 NickName = user.NickName,

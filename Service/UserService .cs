@@ -30,6 +30,7 @@ namespace BoardCreate.Service
         
         public async Task<MemberModel> LoginCheck(string UserId, string UserPW, bool IdSave)
         {
+
             int type = 0;
             var user = await _memberRepository.GetUserByIdData(UserId, type);
             if(user == null) return null;
@@ -38,6 +39,7 @@ namespace BoardCreate.Service
             if (decryptedPassword != user.UserPW) return null;
 
             return user;
+
         }
 
         #region Board

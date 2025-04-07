@@ -113,7 +113,6 @@ namespace BoardCreate.Repositories
 
             return count == 0;
         }
-        /*
         public async Task<MemberModel> GetUserByIdData(string UserValue, int type)
         {
 
@@ -123,14 +122,14 @@ namespace BoardCreate.Repositories
                 user = await _memberDbContext.Member.FirstOrDefaultAsync(m => m.UserId == UserValue);
 
             }
+            /*
             else if (type == 1)
             {
                 user = await _memberDbContext.Member.FirstOrDefaultAsync(m => m.NickName == UserValue);
             }
-
+            */
             return user;
         }
-        */
         public async Task<bool> UserPreferencesDuplicateCehck(string userId, int boardIdx)
         {
             bool exists = false;
