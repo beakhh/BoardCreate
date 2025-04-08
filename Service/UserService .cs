@@ -254,6 +254,24 @@ namespace BoardCreate.Service
             };
         }
 
+        public async Task<BoardDetailEditModel> GetBoardEditeService(int Board_IDX, int SectionIDX, UserSessionModel userSessionModel)
+        {
+
+            BoardModel board  = await _boardRepository.GetBoardEditeRepository(Board_IDX, SectionIDX, userSessionModel);
+            
+            BoardDetailEditModel boardDetailEditModel = new BoardDetailEditModel();
+
+            if (board != null)
+            {
+                boardDetailEditModel.BoardTabs = await _boardRepository.GetSectionTabsLIstRepository(SectionIDX, userSessionModel.UserLevel); // 이거 기본값 0 활성화 1로 바꾸어야함 이상해
+                boardDetailEditModel.Board = board;
+            }
+            boardDetailEditModel.UserSession = userSessionModel;
+
+
+            return boardDetailEditModel;
+        }
+
         #endregion
 
 

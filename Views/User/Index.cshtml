@@ -258,3 +258,10 @@
     updateUserRecentViewLists();
 </script>
 
+@using Newtonsoft.Json
+@if (TempData["GetboardDetailModelFalseAlertMessage"] != null)
+{
+    <script>
+        alert(@Html.Raw(JsonConvert.SerializeObject(TempData["GetboardDetailModelFalseAlertMessage"])));
+    </script>
+}
