@@ -303,9 +303,14 @@
                     조회수 :  @Model.Board.ViewCount
                 </div>
                 @if(Model.Board.UserID == Model.UserSession.UserID){
-                    <div id="BoardInsert_Edit">
-                        수정하기
-                    </div>
+                    <form id="editForm" action="/User/BoardDetailEdit" method="get">
+                        <button type="submit" id="BoardInsert_Edit">
+                            수정하기
+                        </button>
+
+                        <input type="hidden" name="Board_IDX" value="@Model.Board.IDX" />
+                        <input type="hidden" name="SectionIDX" value="@Model.Board.SectionIDX" />
+                    </form>
                 }
             </div>
             <div class="qq" id="renderedContent" style="min-height: 500px; padding: 10px;">
@@ -427,6 +432,15 @@
 <script>
     'use script';
     updateUserRecentViewLists();
+
+    function EditBoardDetail(){
+        const boardIdx = document.getElementById("boardIdxCheck").value;
+
+
+    }
+
+
+
 
     const commentsButton2 = document.getElementById("commentsButton2");
     const textareaComments = document.getElementById('textareaComments');
@@ -1341,4 +1355,6 @@
     // ckediter
     document.getElementById('renderedContent').innerHTML = '@sanitizedContent'.trim();
 </script>
+
+
 

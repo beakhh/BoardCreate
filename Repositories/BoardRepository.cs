@@ -12,6 +12,8 @@ using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using BoardCreate.Models.ViewModels;
+using Microsoft.VisualBasic;
 
 
 namespace BoardCreate.Repositories
@@ -989,15 +991,70 @@ namespace BoardCreate.Repositories
             return BoardList;
         }
 
+        public async Task<BoardModel> GetBoardEditeRepository(int Board_IDX, int SectionIDX, UserSessionModel userSessionModel)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
 
+                string query = @"
+                SELECT b.IDX, b.SectionIDX, b.Tab, b.UserID, b.NickName, b.Title, b.Contents b.Title, b.BoardPrivate, b.ViewCount, b.BoardCreatedAt
+                    FROM Board.Board b
+                    WHERE 
+                        b.IDX = @value1 AND b.SectionIDX = @value2 
+                        AND EXISTS 
+                            (
+                            SELECT 1
+                                FROM UserInfo.Member m
+                                WHERE m.UserID = b.UserID AND m.IDX = @value3 AND m.UserID = @value4 AND m.NickName = @value5
+                            );
+                ";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@value1", Board_IDX);
+                    command.Parameters.AddWithValue("@value2", SectionIDX);
+                    command.Parameters.AddWithValue("@value3", userSessionModel.IDX);
+                    command.Parameters.AddWithValue("@value4", userSessionModel.UserID);
+                    command.Parameters.AddWithValue("@value5", userSessionModel.NickName);
+
+                    try
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                return new BoardModel
+                                {
+                                    IDX = reader.GetInt32(0),            
+                                    SectionIDX = reader.GetInt32(1),           
+                                    Tab = reader.GetString(2),                  
+                                    UserID = reader.GetString(3),              
+                                    NickName = reader.GetString(4),           
+                                    Title = reader.GetString(5),
+                                    Contents = reader.GetString(6),               
+                                    BoardPrivate = reader.GetInt32(7),       
+                                    ViewCount = reader.GetInt32(8),          
+                                    BoardCreatedAt = reader.GetDateTime(9)      
+                                };
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[ERROR] GetBoardEditeRepository: {ex.Message}");
+                        throw;
+                    }
+                }
+            }
+
+            return null; // 조건이 안 맞을 경우 null 반환
+        }
 
 
 
 
     }
-
-
-
 }
 /*
  

@@ -517,6 +517,32 @@ namespace BoardCreate.Controllers
             return View("Board/BoardDetail", boardDetailModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> BoardDetailEdit(int Board_IDX = -1, int SectionIDX = -1)
+        {
+            if (Board_IDX < 0 || SectionIDX < 0 )
+            {
+                TempData["GetboardDetailModelFalseAlertMessage"] = "잘못된 접근입니다.";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                var userId = HttpContext.Session.GetObject<string>("UserID");
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    TempData["GetboardDetailModelFalseAlertMessage"] = "잘못된 접근입니다.";
+                    return RedirectToAction("Index");
+                }
+                BoardDetailEditModel boardDetailEditModel = new BoardDetailEditModel();
+
+                UserSessionModel userSessionModel = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
+
+                boardDetailEditModel = await _userService.GetBoardEditeService(Board_IDX, SectionIDX, userSessionModel);
+                return View("Board/BoardDetailEdit",boardDetailEditModel);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> UpdateUserPreferencesLikeStatus(int BoardIDX, int UpdateType, string UserID)
         {
