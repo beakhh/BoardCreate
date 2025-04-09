@@ -1,0 +1,322 @@
+﻿@{
+    ViewData["Title"] = "BoardDetailEdit";
+}
+@model BoardCreate.Models.Board.BoardDetailEditModel
+@inject IHttpContextAccessor HttpContextAccessor
+<style>
+    .container2 {
+        display: flex;
+        width: 1079px;
+        height: 100%;
+    }
+
+    .left_container {
+        width: 80%;
+        height: 900px;
+    }
+
+    .right_container {
+        width: 20%;
+        height: 900px;
+    }
+
+    .Home_Login {
+        width: 130px;
+        height: 30px
+    }
+
+    #top {
+        display: flex;
+        align-items: center; /* 세로 정렬 */
+        border: 0.1px solid #ced4da;
+        border-radius: 9px;
+        height: 77px;
+        width: 100%;
+    }
+
+    #plus_button {
+        margin-left: auto; /* 오른쪽 끝으로 밀어내기 */
+    }
+
+    #rowNumber1 {
+        border: 0.1px solid #ced4da;
+        border-radius: 9px;
+        width: 100%;
+        margin-left: 0;
+        height: 50px;
+    }
+
+    #rowNumber2 {
+        border: 0.1px solid #ced4da;
+        border-radius: 9px;
+        width: 100%;
+        margin-left: 0;
+        height: 30px;
+    }
+
+    #rowNumber3 {
+        border: 0.1px solid #ced4da;
+        border-radius: 9px;
+        width: 100%;
+        margin-left: 0;
+        height: 691px;
+    }
+
+    #rowNumber4 {
+        margin: 0px;
+        border: solid 1px;
+        height: 50px;
+        display: flex;
+        align-content: center;
+        text-align: right;
+    }
+
+    .TabsStyle {
+        display: flex !important;
+        flex-direction: row;
+        width: 68px;
+        padding: 0px;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #rowNumber1-1 {
+        width: 14%;
+    }
+
+    #rowNumber1-2 {
+        width: 86%;
+    }
+
+    .cke_top .cke_reset_all {
+        display: none !important;
+    }
+
+    .cke {
+        width: 100% !important; /* CKEditor 컨테이너의 너비 설정 */
+        max-width: 100%; /* 최대 너비 설정 */
+    }
+
+    .cke_contents {
+        height: 600px !important; /* CKEditor 내용 영역의 높이 설정 */
+    }
+
+    #inputBox_1 {
+        border: 0.1px solid #ced4da;
+        border-radius: 9px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 99%;
+        height: 56px;
+        padding: 8px;
+        margin: 13px 0 7px 0;
+    }
+
+    #current_boardTabs {
+        width: 10%;
+    }
+
+    #inputTitle {
+        width: 70%;
+    }
+
+    #selectBoardPrivate {
+        width: 10%;
+    }
+
+    #inputBox_2 {
+        width: 99%;
+        margin-left: 0;
+        height: 100%;
+        padding: 2px;
+    }
+
+    #inputBox_3 {
+        display: flex;
+        justify-content: flex-end;
+        margin: 10px 0 0 0;
+    }
+
+    .clickBox {
+        height: 36px;
+        width: 81px;
+        font-size: 14px;
+        padding: 3px;
+        margin: 0 9px 0 0;
+        background-color: white;
+    }
+
+    #a {
+        border: 2px solid #c680d98a;
+        border-radius: 12px;
+    }
+
+    #b {
+        border: 2px solid #82a8df;
+        border-radius: 12px;
+    }
+
+    #a:hover {
+        background-color: #c680d98a;
+    }
+
+    #b:hover {
+        background-color: #82a8df;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/js/ckeditor/ckeditor.js"></script>
+</head>
+
+<body>
+    <div id="top">
+        <div id="">
+        </div>
+    </div>
+
+    <div class="container2">
+        <div class="left_container">
+            <form id="myForm" asp-action="BoardInsert" asp-controller="User" method="post">
+                <div id="inputBox_1">
+                    <div id="current_boardTabs">
+                        <select id="tab" name="Tab" class="form-control">
+                            @foreach (var item in Model.BoardTabs)
+                            {
+                                var selected = item.TabName == Model.Board.Tab ? "selected=\"selected\"" : "";
+                                @Html.Raw($"<option value=\"{item.TabName}\" {selected}>{item.TabName}</option>")
+                            }
+                        </select>
+                    </div>
+                    <div id="inputTitle">
+                        <input type="text" maxlength="25" id="title" name="Title" class="form-control" placeholder="제목을 입력하세요" value="@Model.Board.Title" required />
+
+                    </div>
+                    <div id="selectBoardPrivate">
+                        @{
+                            var options = new List<(string Value, string Text)>
+                            {
+                            ("4", "일반글"),
+                            ("1", "공지사항"),
+                            ("2", "이벤트"),
+                            ("0", "관리자 공지")
+                            };
+                        }
+                        @if (Model.UserSession.UserLevel < 4)
+                        {
+                            <select id="boardPrivate" name="BoardPrivate" class="form-control">
+                                @foreach (var opt in options)
+                                {
+                                    var selected = opt.Value == Model.Board.BoardPrivate.ToString() ? "selected=\"selected\"" : "";
+                                    @Html.Raw($"<option value=\"{opt.Value}\" {selected}>{opt.Text}</option>")
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            <input type="hidden" id="boardPrivate" name="BoardPrivate" value="4" />
+                        }
+                    </div>
+                </div>
+                <div id="inputBox_2">
+                    <textarea name="Contents" id="content">@Html.Raw(Model.Board.Contents)</textarea>
+                </div>
+                <div id="inputBox_3">
+                    <button type="button" id="a" class="clickBox" onclick="editeBoardDetail()">수정하기</button>&nbsp;
+                    <button type="button" id="b" class="clickBox" onclick="">돌아가기</button>
+                </div>
+            </form>
+        </div>
+        <div class="right_container">
+            <div id="recentBox1">
+                <div class="recentBox">
+                    <div id="recontBoxTitle">
+                        최신글
+                    </div>
+                    <div id="recentListBox_Every">
+                    </div>
+                </div>
+
+                <div class="recentBox">
+                    <div id="recontBoxTitle">
+                        내가 본 최신글
+                    </div>
+                    <div id="recentListBox_My">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        'use strict';
+        updateUserRecentViewLists();
+
+
+        function editeBoardDetail() {
+            // 빈 문자열(공백만)은 금지
+            const regTitle1 = /^(?!\s*$)/;
+            // 최대 25자, 한글(완성형 + 자모), 영문, 숫자, 공백, 특수문자 허용
+            const regTitle2 = /^[\w\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F\s!@@#$%^&*()_\-+=\[\]{};:'",.<>\/?\\|`~]{1,25}$/;
+            // 내용 공백만 금지
+            const regContents1 = /^(?!\s*$)/;
+
+            let Title = noSpaces(document.getElementById("title").value);
+            let Content = CKEDITOR.instances.content.getData();
+
+            let TabIdx = document.getElementById("tab").value;
+            let BoardPrivate = document.getElementById("boardPrivate").value;
+            let SectionIDX = document.getElementById("sectionIDX").value;
+
+            if (!regTitle1.test(Title)) {
+                alert("제목을 입력하시오");
+                document.getElementById("title").focus();
+                return false;
+            }
+            else if (!regTitle2.test(Title)) {
+                alert("제목은 25자 이하이며 허용된 문자만 사용할 수 있습니다.");
+                document.getElementById("title").focus();
+                return false;
+            }
+            else if (!regContents1.test(Content)) {
+                alert("내용을 입력하시오");
+                CKEDITOR.instances.content.focus();
+                return false;
+            }
+
+            document.getElementById("myForm").submit(); // 폼 ID를 사용해 제출
+        }
+
+        function noSpaces(str) {
+            return str.replace(/\s+/g, " ").trim(); // 공백 여러 개는 하나로, 양 끝 공백 제거
+        }
+
+        CKEDITOR.replace('content', {
+            language: 'ko',
+            height: '100%', // 높이를 100%로 설정
+            width: '100%',  // 너비를 100%로 설정 (CSS 방식)
+            toolbar: [
+                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline'] },
+                { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                { name: 'insert', items: ['Image', 'Table'] }
+            ]
+        });
+
+        document.getElementById("myForm").addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                // 입력 요소가 textarea가 아닌 경우만 막음
+                if (event.target.tagName !== "TEXTAREA") {
+                    event.preventDefault(); // 엔터 눌러도 폼 제출 안 되게 막음
+                }
+            }
+        });
+
+
+
+    </script>
+</body>
+

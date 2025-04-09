@@ -998,7 +998,7 @@ namespace BoardCreate.Repositories
                 await connection.OpenAsync();
 
                 string query = @"
-                SELECT b.IDX, b.SectionIDX, b.Tab, b.UserID, b.NickName, b.Title, b.Contents b.Title, b.BoardPrivate, b.ViewCount, b.BoardCreatedAt
+                SELECT b.IDX, b.SectionIDX, b.Tab, b.UserID, b.NickName, b.Title, b.Contents, b.BoardPrivate, b.ViewCount, b.BoardCreatedAt
                     FROM Board.Board b
                     WHERE 
                         b.IDX = @value1 AND b.SectionIDX = @value2 
@@ -1009,7 +1009,7 @@ namespace BoardCreate.Repositories
                                 WHERE m.UserID = b.UserID AND m.IDX = @value3 AND m.UserID = @value4 AND m.NickName = @value5
                             );
                 ";
-
+                 
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@value1", Board_IDX);

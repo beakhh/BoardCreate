@@ -539,6 +539,8 @@ namespace BoardCreate.Controllers
                 UserSessionModel userSessionModel = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
 
                 boardDetailEditModel = await _userService.GetBoardEditeService(Board_IDX, SectionIDX, userSessionModel);
+                //여기에 boardPrivate가 3인 개념글이면 수정 불가 삭제만 가능 프론트에서도 확인해야함
+                
                 return View("Board/BoardDetailEdit",boardDetailEditModel);
             }
         }
