@@ -998,8 +998,8 @@ namespace BoardCreate.Repositories
                 await connection.OpenAsync();
 
                 string query = @"
-                SELECT b.IDX, b.SectionIDX, b.Tab, b.UserID, b.NickName, b.Title, b.Contents, b.BoardPrivate, b.ViewCount, b.BoardCreatedAt
-                    FROM Board.Board b
+                SELECT b.IDX, b.SectionIDX, b.Tab, b.UserID, b.NickName, b.Title, b.Contents, b.BoardPrivate, b.ViewCount, b.BoardCreatedAt, s.SectionName
+                    FROM Board.Board b INNER JOIN Board.BoardSections s ON s.IDX = b.SectionIDX 
                     WHERE 
                         b.IDX = @value1 AND b.SectionIDX = @value2 
                         AND EXISTS 
@@ -1035,7 +1035,8 @@ namespace BoardCreate.Repositories
                                     Contents = reader.GetString(6),               
                                     BoardPrivate = reader.GetInt32(7),       
                                     ViewCount = reader.GetInt32(8),          
-                                    BoardCreatedAt = reader.GetDateTime(9)      
+                                    BoardCreatedAt = reader.GetDateTime(9),
+                                    SectionName = reader.GetString(10)
                                 };
                             }
                         }
@@ -1051,7 +1052,40 @@ namespace BoardCreate.Repositories
             return null; // 조건이 안 맞을 경우 null 반환
         }
 
+        public async Task<int> UpdateBoardDeatilEdite(BoardModel boardModel, UserSessionModel userSessionModel)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                string query = @"
+                    UPDATE Board.Board 
+                        SET Tab = @Tab , Title = @Title,  Contents = @Contents,  BoardPrivate = @BoardPrivate,  BoardUpdatedAt = @BoardUpdatedAt
+                        WHERE IDX = @IDX AND SectionIDX = @SectionIDX AND UserID = @UserID
+                ";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Tab",boardModel.Tab);
+                    command.Parameters.AddWithValue("@Title", boardModel.Title);
+                    command.Parameters.AddWithValue("@Contents", boardModel.Contents);
+                    command.Parameters.AddWithValue("@BoardPrivate", boardModel.BoardPrivate);
+                    command.Parameters.AddWithValue("@BoardUpdatedAt", DateTime.Now);
+                    command.Parameters.AddWithValue("@IDX", boardModel.IDX);
+                    command.Parameters.AddWithValue("@SectionIDX", boardModel.SectionIDX);
+                    command.Parameters.AddWithValue("@UserID", userSessionModel.UserID);
 
+                    try
+                    {
+                        int result = await command.ExecuteNonQueryAsync(); // 영향받은 행 수 반환, 성공 1
+                        return result;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[ERROR] UpdateBoardDeatilEdite: {ex.Message}");
+                        throw;
+                    }
+                }
+            }
+        }
 
 
     }

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Newtonsoft.Json
+@{
     ViewData["Title"] = "BoardDetail";
 }
 @model BoardCreate.Models.Board.BoardDetailModel
@@ -308,7 +309,7 @@
                             수정하기
                         </button>
 
-                        <input type="hidden" name="Board_IDX" value="@Model.Board.IDX" />
+                        <input type="hidden" name="BoardIDX" value="@Model.Board.IDX" />
                         <input type="hidden" name="SectionIDX" value="@Model.Board.SectionIDX" />
                     </form>
                 }
@@ -1354,7 +1355,14 @@
     };
     // ckediter
     document.getElementById('renderedContent').innerHTML = '@sanitizedContent'.trim();
+
 </script>
 
 
+@if (TempData["ResultSuccessMessage"] != null)
+{
+    <script>
+        alert(@Html.Raw(JsonConvert.SerializeObject(TempData["ResultSuccessMessage"])));
+    </script>
+}
 

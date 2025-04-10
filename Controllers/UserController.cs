@@ -155,7 +155,7 @@ namespace BoardCreate.Controllers
 
             var userId = HttpContext.Session.GetObject<string>("UserID");
 
-            if (!string.IsNullOrEmpty(userId))  SectionLists.UserSession = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
+            if (!string.IsNullOrEmpty(userId)) SectionLists.UserSession = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
 
             return View(SectionLists);
         }
@@ -313,7 +313,7 @@ namespace BoardCreate.Controllers
             var userId = HttpContext.Session.GetObject<string>("UserID");
 
             UserSessionModel userSession = null;
-            string session_UserID = "Guest"; 
+            string session_UserID = "Guest";
 
             if (!string.IsNullOrEmpty(userId))
             {
@@ -343,7 +343,7 @@ namespace BoardCreate.Controllers
             }
 
             int UserLevel = userSession?.UserLevel ?? 8;
-             
+
             var TabsAllList = await _userService.GetSectionTabsListService(boardSundryModel.SectionIDX, UserLevel);
             var BoardTabs = new List<SectionTabsModel>();
             BoardTabs.AddRange(TabsAllList);
@@ -361,7 +361,7 @@ namespace BoardCreate.Controllers
             return View("Board/Board", ModelCollect);
         }
 
-       
+
         [HttpGet]
         public async Task<IActionResult> BoardInsert(int SectionIDX)
         {
@@ -478,11 +478,11 @@ namespace BoardCreate.Controllers
                 }
             }
             else viewCountCheck = 1;
-            
+
             var userId = HttpContext.Session.GetObject<string?>("UserID");
 
             // 여기 기준 20을 변수로 받으면 좋을 듯
-            if (ViewCount >20 || userId == null) viewCountCheck = 1;
+            if (ViewCount > 20 || userId == null) viewCountCheck = 1;
 
             BoardDetailModel boardDetailModel = new BoardDetailModel();
 
@@ -518,9 +518,9 @@ namespace BoardCreate.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BoardDetailEdit(int Board_IDX = -1, int SectionIDX = -1)
+        public async Task<IActionResult> BoardDetailEdit(int BoardIDX = -1, int SectionIDX = -1)
         {
-            if (Board_IDX < 0 || SectionIDX < 0 )
+            if (BoardIDX < 0 || SectionIDX < 0)
             {
                 TempData["GetboardDetailModelFalseAlertMessage"] = "잘못된 접근입니다.";
                 return RedirectToAction("Index");
@@ -538,12 +538,50 @@ namespace BoardCreate.Controllers
 
                 UserSessionModel userSessionModel = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
 
-                boardDetailEditModel = await _userService.GetBoardEditeService(Board_IDX, SectionIDX, userSessionModel);
+                boardDetailEditModel = await _userService.GetBoardEditeService(BoardIDX, SectionIDX, userSessionModel);
                 //여기에 boardPrivate가 3인 개념글이면 수정 불가 삭제만 가능 프론트에서도 확인해야함
-                
-                return View("Board/BoardDetailEdit",boardDetailEditModel);
+
+                return View("Board/BoardDetailEdit", boardDetailEditModel);
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> BoardEdit(BoardModel boardModel)
+        {
+            var userId = HttpContext.Session.GetObject<string?>("UserID");
+            if (string.IsNullOrEmpty(userId))
+            {
+                TempData["GetboardDetailModelFalseAlertMessage"] = "잘못된 접근입니다.";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                UserSessionModel userSessionModel = HttpContext.Session.GetObject<UserSessionModel>($"UserSession_{userId}");
+                int result = await _userService.UpdateBoardDetailEdite(boardModel, userSessionModel);
+
+                switch (result)
+                {
+                    case 0:
+                        TempData["ResultfailMessage"] = "수정 실패 다시 시도해 주세요.";
+                        return RedirectToAction("BoardDetailEdit", new { BoardIDX = boardModel.IDX, SectionIDX = boardModel.SectionIDX });
+
+                    case 1:
+                        TempData["ResultSuccessMessage"] = "수정이 완료되었습니다.";
+                        return RedirectToAction("BoardDetail", new { BoardIDX = boardModel.IDX, SectionIDX = boardModel.SectionIDX });
+
+                    case 2:
+                        TempData["GetboardDetailModelFalseAlertMessage"] = "잘못된 접근입니다.";
+                        return RedirectToAction("Index");
+
+                }
+            }
+
+
+
+
+            
+            return View();
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> UpdateUserPreferencesLikeStatus(int BoardIDX, int UpdateType, string UserID)

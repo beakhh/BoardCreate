@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Newtonsoft.Json
+@{
     ViewData["Title"] = "BoardDetailEdit";
 }
 @model BoardCreate.Models.Board.BoardDetailEditModel
@@ -176,12 +177,13 @@
 <body>
     <div id="top">
         <div id="">
+            @Model.Board.SectionName 
         </div>
     </div>
 
     <div class="container2">
         <div class="left_container">
-            <form id="myForm" asp-action="BoardInsert" asp-controller="User" method="post">
+            <form id="myForm" asp-action="BoardEdit" asp-controller="User" method="post">
                 <div id="inputBox_1">
                     <div id="current_boardTabs">
                         <select id="tab" name="Tab" class="form-control">
@@ -194,7 +196,6 @@
                     </div>
                     <div id="inputTitle">
                         <input type="text" maxlength="25" id="title" name="Title" class="form-control" placeholder="제목을 입력하세요" value="@Model.Board.Title" required />
-
                     </div>
                     <div id="selectBoardPrivate">
                         @{
@@ -229,6 +230,11 @@
                     <button type="button" id="a" class="clickBox" onclick="editeBoardDetail()">수정하기</button>&nbsp;
                     <button type="button" id="b" class="clickBox" onclick="">돌아가기</button>
                 </div>
+                <input type="hidden" name="IDX" value="@Model.Board.IDX" />
+                <input type="hidden" name="SectionIDX" value="@Model.Board.SectionIDX" />
+                <input type="hidden" name="UserID" value="@Model.Board.UserID" />
+                <input type="hidden" name="UserIDX" value="@Model.UserSession.IDX" />
+                <input type="hidden" name="SectionName" value="@Model.Board.SectionName" />
             </form>
         </div>
         <div class="right_container">
@@ -256,7 +262,6 @@
         'use strict';
         updateUserRecentViewLists();
 
-
         function editeBoardDetail() {
             // 빈 문자열(공백만)은 금지
             const regTitle1 = /^(?!\s*$)/;
@@ -267,10 +272,6 @@
 
             let Title = noSpaces(document.getElementById("title").value);
             let Content = CKEDITOR.instances.content.getData();
-
-            let TabIdx = document.getElementById("tab").value;
-            let BoardPrivate = document.getElementById("boardPrivate").value;
-            let SectionIDX = document.getElementById("sectionIDX").value;
 
             if (!regTitle1.test(Title)) {
                 alert("제목을 입력하시오");
@@ -287,7 +288,6 @@
                 CKEDITOR.instances.content.focus();
                 return false;
             }
-
             document.getElementById("myForm").submit(); // 폼 ID를 사용해 제출
         }
 
@@ -319,4 +319,11 @@
 
     </script>
 </body>
+
+@if (TempData["ResultfailMessage"] != null)
+{
+    <script>
+        alert(@Html.Raw(JsonConvert.SerializeObject(TempData["ResultfailMessage"])));
+    </script>
+}
 

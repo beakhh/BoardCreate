@@ -258,7 +258,7 @@ namespace BoardCreate.Service
         {
 
             BoardModel board  = await _boardRepository.GetBoardEditeRepository(Board_IDX, SectionIDX, userSessionModel);
-            
+
             BoardDetailEditModel boardDetailEditModel = new BoardDetailEditModel();
 
             if (board != null)
@@ -270,6 +270,14 @@ namespace BoardCreate.Service
 
 
             return boardDetailEditModel;
+        }
+        public async Task<int> UpdateBoardDetailEdite(BoardModel boardModel, UserSessionModel userSessionModel)
+        {
+            int result = 0;
+            if (boardModel.UserIDX != userSessionModel.IDX) return result = 2;
+            result = await _boardRepository.UpdateBoardDeatilEdite(boardModel, userSessionModel);
+
+            return result;
         }
 
         #endregion
